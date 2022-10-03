@@ -1,0 +1,10 @@
+{
+  "data": {},
+  "event": {
+    "id": "system-progress-case-awaiting-final-order",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

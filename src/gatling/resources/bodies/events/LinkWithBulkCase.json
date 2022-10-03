@@ -1,0 +1,10 @@
+{
+  "data": {},
+  "event": {
+    "id": "system-link-with-bulk-case",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

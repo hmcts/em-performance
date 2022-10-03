@@ -1,0 +1,10 @@
+{
+  "data": {},
+  "event": {
+    "id": "system-progress-held-case",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

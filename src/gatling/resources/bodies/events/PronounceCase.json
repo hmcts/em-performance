@@ -1,0 +1,10 @@
+{
+  "data": {},
+  "event": {
+    "id": "system-pronounce-case",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

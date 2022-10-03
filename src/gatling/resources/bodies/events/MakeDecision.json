@@ -1,0 +1,12 @@
+{
+  "data": {
+    "coGranted": "Yes"
+  },
+  "event": {
+    "id": "legal-advisor-make-decision",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

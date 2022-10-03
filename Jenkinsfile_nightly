@@ -1,0 +1,41 @@
+#!groovy
+
+properties([
+        //pipelineTriggers([cron('00 21 * * *')]),
+        //A build parameter TEST_TYPE is used to tell the script to use the pipeline simulation configuration
+        parameters([
+                choice(name: 'TEST_TYPE', choices: 'pipeline', description: 'Test type (must be \'pipeline\' for Jenkins use)')
+        ])
+])
+
+@Library("Infrastructure") _
+
+def product = "nfdiv"
+def component = "frontend"
+
+def secrets = [
+        'ccd-perftest': [
+                secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
+        ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [$class     : 'AzureKeyVaultSecret',
+     secretType : 'Secret',
+     name       : secretName,
+     version    : '',
+     envVariable: envVar
+    ]
+}
+
+withNightlyPipeline("java", product, component) {
+
+    loadVaultSecrets(secrets)
+
+    enablePerformanceTest()
+
+    after('performanceTest') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+    }
+
+}

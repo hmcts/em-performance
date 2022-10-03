@@ -1,0 +1,14 @@
+{
+  "data": {
+    "coGrantedDate": "2021-08-01",
+    "issueDate": "2021-08-01",
+    "coPronouncementJudge": "District Judge"
+  },
+  "event": {
+    "id": "caseworker-amend-case",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

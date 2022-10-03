@@ -1,0 +1,16 @@
+{
+  "data": {
+    "labelContentMarriageOrCivilPartnership": "marriage",
+    "marriageDate": "${marriageDate}",
+    "marriageApplicant1Name": "${marriageApplicant1Name}",
+    "marriageApplicant2Name": "${marriageApplicant2Name}",
+    "marriagePlaceOfMarriage": "PerfTest"
+  },
+  "event": {
+    "id": "caseworker-issue-application",
+    "summary": "",
+    "description": ""
+  },
+  "event_token": "${eventToken}",
+  "ignore_warning": false
+}

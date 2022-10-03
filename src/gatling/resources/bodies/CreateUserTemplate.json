@@ -1,0 +1,11 @@
+{
+  "email":"${emailAddress}",
+  "forename":"PerfTest",
+  "password":"${password}",
+  "roles":[
+    {
+      "code":"${role}"
+    }
+  ],
+  "surname":"Citizen"
+}
