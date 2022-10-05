@@ -17,7 +17,7 @@ sourceCompatibility = "11"
 targetCompatibility = "11"
 
 tasks.withType(JavaExec) {
-  jvmArgs = ['-Xms1024m', '-Xmx2048m']
+  jvmArgs = ['-Xms1024m', '-Xmx4048m']
   /* Use the following args to build a report when a test was terminated
   args = [
       "--reports-only", "fact-20201109092032896",
@@ -52,7 +52,7 @@ gatling {
   toolVersion '3.3.1'
   scalaVersion '2.12.12'
   simulations = [
-          'simulations.NFD_Simulation'
+          'simulations.DMStoreAPI'
   ]
 }
 
