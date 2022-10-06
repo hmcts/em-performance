@@ -32,7 +32,6 @@ object DMStore {
           .contentType("application/pdf")
           .fileName("data/${fileSize}MB.pdf")).asMultipartForm
         .formParam("classification", "PUBLIC")
-        .check(status is 200)
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("documentLink")))
   }
 
@@ -45,10 +44,9 @@ object DMStore {
   val DMStoreDocDownload =
 
     group("DMStore_DocDownload") {
-      exec(http("GET/Documents")
+      exec(http("GET_Documents")
         .get(dmStoreURL + "/documents/9ce621dc-82f0-4ecc-b242-0e0ca9b90a59")
         .headers(dmStoreGetDocumentHeader)
-        .check(status is 200)
         .check(jsonPath("$._links.self.href").is(dmStoreURL + "/documents/9ce621dc-82f0-4ecc-b242-0e0ca9b90a59")))
     }
 
@@ -61,10 +59,10 @@ object DMStore {
   val DMStoreDocDownloadBinary =
 
     group("DMStore_DocDownloadBinary") {
-      exec(http("GET/Documents/binary")
+      exec(http("GET_Documents_binary")
         .get(dmStoreURL + "/documents/9ce621dc-82f0-4ecc-b242-0e0ca9b90a59/binary")
         .headers(dmStoreGetDocumentHeader)
-        .check(status is 200))
+        .check(bodyBytes.transform(_.size > 100).is(true)))
     }
 
 } // end of
