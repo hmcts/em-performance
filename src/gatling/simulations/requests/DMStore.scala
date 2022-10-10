@@ -30,7 +30,8 @@ object DMStore {
         .bodyPart(
         RawFileBodyPart ("files", "data/${fileSize}MB.pdf")
           .contentType("application/pdf")
-          .fileName("data/${fileSize}MB.pdf")).asMultipartForm
+          //.fileName("data/${fileSize}MB.pdf")).asMultipartForm
+          .fileName("EM_DMStore${fileSize}MB.pdf")).asMultipartForm
         .formParam("classification", "PUBLIC")
         .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("documentLink")))
   }
@@ -38,29 +39,29 @@ object DMStore {
    /* GET /documents request to DM Store.  Retrieves JSON representation of a Stored Document
       The request requires an S2SToken so Authentication.S2SAuth should be called prior to running this request.
       The S2SToken is sent within the dmStoreGetDocumentHeader
-      Hardcoded for first commit but will assign feeders on later updates when data is created
+      ${documentId} variable is assigned from the GETDocument.csv feeder file.  The feeder is defined in the Simulation file
    */
 
   val DMStoreDocDownload =
 
     group("DMStore_DocDownload") {
       exec(http("GET_Documents")
-        .get(dmStoreURL + "/documents/9ce621dc-82f0-4ecc-b242-0e0ca9b90a59")
+        .get(dmStoreURL + "/documents/${documentId}")
         .headers(dmStoreGetDocumentHeader)
-        .check(jsonPath("$._links.self.href").is(dmStoreURL + "/documents/9ce621dc-82f0-4ecc-b242-0e0ca9b90a59")))
+        .check(jsonPath("$._links.self.href").is(dmStoreURL + "/documents/${documentId}")))
     }
 
    /* GET /documents request to DM Store.  Retrieves content of most recent Document Content version
       The request requires an S2SToken so Authentication.S2SAuth should be called prior to running this request.
       The S2SToken is sent within the dmStoreGetDocumentHeader
-      Hardcoded for first commit but will assign feeders on later updates when data is created
+      ${documentId} variable is assigned from the GETDocumentBinary.csv feeder file.  The feeder is defined in the Simulation file
    */
 
   val DMStoreDocDownloadBinary =
 
     group("DMStore_DocDownloadBinary") {
       exec(http("GET_Documents_binary")
-        .get(dmStoreURL + "/documents/9ce621dc-82f0-4ecc-b242-0e0ca9b90a59/binary")
+        .get(dmStoreURL + "/documents/${documentId}/binary")
         .headers(dmStoreGetDocumentHeader)
         .check(bodyBytes.transform(_.size > 100).is(true)))
     }

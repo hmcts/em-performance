@@ -46,6 +46,7 @@ dependencies {
   gatling "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
   //gatlingImplementation "groupio.rest-assured:rest-assured:4.3.1"
   gatling "com.warrenstrange:googleauth:1.5.0"
+  gatling 'org.postgresql:postgresql:42.5.0'
 }
 
 gatling {
@@ -72,5 +73,7 @@ pluginBundle {
 
 
 }
+
+
 
 ext ['netty.version'] = '4.0.51.Final'

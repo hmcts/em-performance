@@ -9,6 +9,8 @@ import requests.{Authentication, DMStore}
 import utils.Environment._
 import scala.concurrent.duration._
 import scala.language.postfixOps
+import utils.JDBCConnection
+import sqlQueries.sqlDMStore._
 
 class DMStoreAPI extends Simulation {
 
@@ -44,6 +46,13 @@ class DMStoreAPI extends Simulation {
   val docUploadRatePerSec = docUploadHourlyTarget / 3600
   val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
+
+  /* SIMULATION FEEDER FILES - KNOW THAT THESE FEEDERS WORK BUT TRYING TO USE SQLFEEDERS INSTEAD*/
+  val DMDocumentDownloadFeeder = csv("feeders/GETDocument.csv").random
+  val DMDocumentDownloadBinaryFeeder = csv("feeders/GETDocumentBinary.csv").random
+  /* JDBC Feeder for valid documents to be downloaded */
+  val sqlDocumentDownloadFeeder = JDBCConnection.connString("EVIDENCE",sqlGetDownloadDocuments)
+
 
   //If running in debug mode, disable pauses between steps
   val pauseOption:PauseType = debugMode match{
@@ -116,6 +125,7 @@ class DMStoreAPI extends Simulation {
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker"))
+      .feed(sqlDocumentDownloadFeeder)
       .exec(DMStore.DMStoreDocDownload)
     }
 
@@ -124,6 +134,7 @@ class DMStoreAPI extends Simulation {
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker"))
+      .feed(sqlDocumentDownloadFeeder)
       .exec(DMStore.DMStoreDocDownloadBinary)
     }
 
