@@ -34,10 +34,16 @@ object Headers {
     "Connection" -> "keep-alive",
     "user-roles" -> "${userRole}",
     "user-id" -> "${userId}",
-
   )
 
-
+  val dmStoreDeleteDocumentHeader = Map(
+    "serviceauthorization" -> "${authToken}",
+    "Content-Type" -> "multipart/form-data",
+    "Accept" -> "*/*",
+    "Host" -> dmStoreHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive"
+  )
 
 
 
