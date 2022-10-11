@@ -24,12 +24,12 @@ object JDBCConnection {
 
     envName match {
       case "EVIDENCE" => {
-        val dbName = ConfigFactory.load.getString("auth.DMStoreDB")
-        val sqlPort = ConfigFactory.load.getString("auth.DMStoreDBPort")
+        val dbName = "evidence"
+        val sqlPort = "5432"
         sqlUserName = ConfigFactory.load.getString("auth.DMStoreDBUsername")
         sqlPassword = ConfigFactory.load.getString("auth.DMStoreDBPassword")
         dbConnectionString = "jdbc:postgresql://localhost:" + sqlPort + "/" + dbName +""
-        println("Evidence JDBCconnection string is " + dbConnectionString)
+        println("Evidence JDBC connection string is " + dbConnectionString)
       }
       case _ => println("Invalid environment name specified")
     } //match

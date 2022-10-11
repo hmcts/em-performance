@@ -48,10 +48,11 @@ class DMStoreAPI extends Simulation {
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
 
   /* SIMULATION FEEDER FILES - KNOW THAT THESE FEEDERS WORK BUT TRYING TO USE SQLFEEDERS INSTEAD*/
-  val DMDocumentDownloadFeeder = csv("feeders/GETDocument.csv").random
-  val DMDocumentDownloadBinaryFeeder = csv("feeders/GETDocumentBinary.csv").random
+  //val DMDocumentDownloadFeeder = csv("feeders/GETDocument.csv").random
+  //val DMDocumentDownloadBinaryFeeder = csv("feeders/GETDocumentBinary.csv").random
   /* JDBC Feeder for valid documents to be downloaded */
-  val sqlDocumentDownloadFeeder = JDBCConnection.connString("EVIDENCE",sqlGetDownloadDocuments)
+  val sqlDocumentDownloadFeeder = JDBCConnection.connString("EVIDENCE",sqlGetDownloadDocuments).circular
+  val sqlDocumentDeleteFeeder = JDBCConnection.connString("EVIDENCE", sqlDeleteDocuments)
 
 
   //If running in debug mode, disable pauses between steps
@@ -117,7 +118,7 @@ class DMStoreAPI extends Simulation {
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker"))
-      .exec(DMStore.DMStoreDocUpload)
+      .exec(DMStore.DMStoreDocumentUpload("GET_DATA_PREP"))
     }
 
   //scenario for DM Store Document Download
@@ -137,6 +138,16 @@ class DMStoreAPI extends Simulation {
       .feed(sqlDocumentDownloadFeeder)
       .exec(DMStore.DMStoreDocDownloadBinary)
     }
+
+  //scenario for DM Store Delete Document
+  val ScnDMStoreDocDelete = scenario("DMStore Document Delete")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker"))
+        .feed(sqlDocumentDeleteFeeder)
+        .exec(DMStore.DMStoreDocDelete)
+    }
+
 
   /*DM STORE SIMULATIONS */
 
