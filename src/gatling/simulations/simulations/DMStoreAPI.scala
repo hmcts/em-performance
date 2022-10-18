@@ -9,8 +9,8 @@ import requests.{Authentication, DMStore}
 import utils.Environment._
 import scala.concurrent.duration._
 import scala.language.postfixOps
-import utils.JDBCConnection
-import sqlQueries.sqlDMStore._
+//import utils.JDBCConnection
+//import sqlQueries.sqlDMStore._
 
 class DMStoreAPI extends Simulation {
 
