@@ -47,6 +47,9 @@ class DMStoreAPI extends Simulation {
   val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
 
+  /* PIPELINE CONFIGURATION */
+  val numberOfPipelineUsers = 1
+
   /* SIMULATION FEEDER FILES - KNOW THAT THESE FEEDERS WORK BUT TRYING TO USE SQLFEEDERS INSTEAD*/
   val DMDocumentDownloadFeeder = csv("feeders/GETDocument.csv").random
   val DMDocumentDownloadBinaryFeeder = csv("feeders/GETDocumentBinary.csv").random
@@ -107,6 +110,8 @@ class DMStoreAPI extends Simulation {
     simulationType match {
       case "perftest" =>
         Seq(global.successfulRequests.percent.gte(95))
+      case "pipeline" =>
+        Seq(global.successfulRequests.percent.gte(95))
       case _ =>
         Seq()
     }
@@ -156,9 +161,9 @@ class DMStoreAPI extends Simulation {
   /*DM STORE SIMULATIONS */
 
   setUp(
-    ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, 0)).pauses(pauseOption),
-    ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, 0)).pauses(pauseOption),
-    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, 0)).pauses(pauseOption),
+    ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

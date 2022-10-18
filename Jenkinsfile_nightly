@@ -1,7 +1,7 @@
 #!groovy
 
 properties([
-        //pipelineTriggers([cron('00 21 * * *')]),
+        pipelineTriggers([cron('00 21 * * *')]),
         //A build parameter TEST_TYPE is used to tell the script to use the pipeline simulation configuration
         parameters([
                 choice(name: 'TEST_TYPE', choices: 'pipeline', description: 'Test type (must be \'pipeline\' for Jenkins use)')
@@ -10,9 +10,10 @@ properties([
 
 @Library("Infrastructure") _
 
-def product = "nfdiv"
-def component = "frontend"
+def product = "em"
+def component = "dm-store-frontend"
 
+/*
 def secrets = [
         'ccd-perftest': [
                 secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
@@ -27,10 +28,10 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
      envVariable: envVar
     ]
 }
-
+*/
 withNightlyPipeline("java", product, component) {
 
-    loadVaultSecrets(secrets)
+    //loadVaultSecrets(secrets)
 
     enablePerformanceTest()
 
