@@ -8,8 +8,7 @@ properties([
         ])
 ])
 
-//@Library("Infrastructure") _
-@Library('Infrastructure@support-new-gatling-gradle-plugin') _
+@Library("Infrastructure") _
 
 def product = "em"
 def component = "dm-store-frontend"

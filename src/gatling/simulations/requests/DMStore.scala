@@ -30,15 +30,15 @@ object DMStore {
                               30d -> exec(_.set("fileSize", "5")),
                               20d -> exec(_.set("fileSize", "10")),
                               10d -> exec(_.set("fileSize", "25")),
-                               5d -> exec(_.set("fileSize", "50")),
+                               5d -> exec(_.set("fileSize", "50"))
       )
-      .exec(http("POST_Documents_${fileSize}MB")
+      .exec(http("POST_Documents_#{fileSize}MB")
         .post(dmStoreURL + "/documents")
         .headers(dmStorePostDocumentHeader)
         .bodyPart(
-          RawFileBodyPart("files", "data/${fileSize}MB.pdf")
+          RawFileBodyPart("files", "data/#{fileSize}MB.pdf")
             .contentType("application/pdf")
-            .fileName("${filePrefix}_EM_DMStore${fileSize}MB.pdf")).asMultipartForm
+            .fileName("#{filePrefix}_EM_DMStore#{fileSize}MB.pdf")).asMultipartForm
           .formParam("classification", "PUBLIC")
           .check(jsonPath("$._embedded.documents[0]._links.self.href").saveAs("documentLink")))
     }
@@ -47,29 +47,29 @@ object DMStore {
    /* GET /documents request to DM Store.  Retrieves JSON representation of a Stored Document
       The request requires an S2SToken so Authentication.S2SAuth should be called prior to running this request.
       The S2SToken is sent within the dmStoreGetDocumentHeader
-      ${documentId} variable is assigned from the GETDocument.csv feeder file.  The feeder is defined in the Simulation file
+      #{documentId} variable is assigned from the GETDocument.csv feeder file.  The feeder is defined in the Simulation file
    */
 
   val DMStoreDocDownload =
 
     group("DMStore_DocDownload") {
       exec(http("GET_Documents")
-        .get(dmStoreURL + "/documents/${documentId}")
+        .get(dmStoreURL + "/documents/#{documentId}")
         .headers(dmStoreGetDocumentHeader)
-        .check(jsonPath("$._links.self.href").is(dmStoreURL + "/documents/${documentId}")))
+        .check(jsonPath("$._links.self.href").is(dmStoreURL + "/documents/#{documentId}")))
     }
 
    /* GET /documents request to DM Store.  Retrieves content of most recent Document Content version
       The request requires an S2SToken so Authentication.S2SAuth should be called prior to running this request.
       The S2SToken is sent within the dmStoreGetDocumentHeader
-      ${documentId} variable is assigned from the GETDocumentBinary.csv feeder file.  The feeder is defined in the Simulation file
+      #{documentId} variable is assigned from the GETDocumentBinary.csv feeder file.  The feeder is defined in the Simulation file
    */
 
   val DMStoreDocDownloadBinary =
 
     group("DMStore_DocDownloadBinary") {
       exec(http("GET_Documents_binary")
-        .get(dmStoreURL + "/documents/${documentId}/binary")
+        .get(dmStoreURL + "/documents/#{documentId}/binary")
         .headers(dmStoreGetDocumentHeader)
         .check(bodyBytes.transform(_.size > 100).is(true)))
     }
@@ -77,7 +77,7 @@ object DMStore {
   /* DELETE /documents request to DM Store.  Deletes the document from DM Store
       The request requires an S2SToken so Authentication.S2SAuth should be called prior to running this request.
       The S2SToken is sent within the dmStoreDeleteDocumentHeader
-      ${documentId} variable is assigned from the sql feeder file.  The feeder is defined in the Simulation file.
+      #{documentId} variable is assigned from the sql feeder file.  The feeder is defined in the Simulation file.
       Response code returned must be 204 for the DELETE.
    */
 
@@ -85,7 +85,7 @@ object DMStore {
 
     group("DMStore_DocDelete") {
       exec(http("DELETE_Documents")
-        .delete(dmStoreURL + "/documents/{documentId}")
+        .delete(dmStoreURL + "/documents/#{documentId}")
         .headers(dmStoreDeleteDocumentHeader)
         .check(status is 204))
     }

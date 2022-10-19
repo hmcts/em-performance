@@ -1,5 +1,5 @@
 plugins {
-  id 'org.owasp.dependencycheck' version '6.0.3'
+  id 'org.owasp.dependencycheck' version '7.2.1'
   id 'scala'
   id 'io.gatling.gradle' version '3.8.4'
   id 'groovy'
@@ -22,6 +22,10 @@ tasks.withType(JavaExec) {
       '--results-folder', file('build/reports/gatling').absolutePath,
       ]
   */
+}
+
+tasks.withType(Copy).all{
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 repositories {
@@ -48,7 +52,7 @@ gatling {
   gatlingVersion '3.8.4'
   scalaVersion '2.13.9'
   simulations = {
-    include "**/*DMStoreAPI.scala"
+    include "simulations/DMStoreAPI.scala"
   }
 }
 
