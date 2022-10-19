@@ -11,32 +11,16 @@ properties([
 @Library("Infrastructure") _
 
 def product = "em"
-def component = "dm-store-frontend"
+def component = "performance"
 
-/*
-def secrets = [
-        'ccd-perftest': [
-                secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
-        ]
-]
 
-static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-    [$class     : 'AzureKeyVaultSecret',
-     secretType : 'Secret',
-     name       : secretName,
-     version    : '',
-     envVariable: envVar
-    ]
-}
-*/
 withNightlyPipeline("java", product, component) {
-
-    //loadVaultSecrets(secrets)
 
     enablePerformanceTest()
 
-    after('performanceTest') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
-    }
+//    after('performanceTest') {
+//        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+//    }
+
 
 }
