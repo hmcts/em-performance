@@ -26,11 +26,11 @@ object DMStore {
       case _ => session.set("filePrefix", "TEST")}
     )
     .group("DMStore_DocUpload") {
-      randomSwitch(35d -> exec(_.set("fileSize", "2")),
-                              30d -> exec(_.set("fileSize", "5")),
-                              20d -> exec(_.set("fileSize", "10")),
-                              10d -> exec(_.set("fileSize", "25")),
-                               5d -> exec(_.set("fileSize", "50"))
+      randomSwitch(80d -> exec(_.set("fileSize", "2")),
+                              10d -> exec(_.set("fileSize", "5")),
+                              5d -> exec(_.set("fileSize", "10")),
+                              3d -> exec(_.set("fileSize", "25")),
+                              2d -> exec(_.set("fileSize", "50"))
       )
       .exec(http("POST_Documents_#{fileSize}MB")
         .post(dmStoreURL + "/documents")
