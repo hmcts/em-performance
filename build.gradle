@@ -2,14 +2,14 @@ plugins {
   id 'org.owasp.dependencycheck' version '7.2.1'
   id 'scala'
   id 'io.gatling.gradle' version '3.8.4'
-  id 'groovy'
-  id 'com.gradle.plugin-publish' version '0.9.8'
-  id 'maven-publish'
+  //id 'groovy'
+  //id 'com.gradle.plugin-publish' version '0.9.8'
+  //id 'maven-publish'
 }
 
-apply plugin: 'scala'
-group 'uk.gov.hmcts.reform'
-version = '1.0'
+//apply plugin: 'scala'
+//group 'uk.gov.hmcts.reform'
+//version = '1.0'
 
 sourceCompatibility = "11"
 targetCompatibility = "11"
@@ -32,11 +32,11 @@ repositories {
   mavenCentral()
 }
 
-ScalaCompileOptions.metaClass.daemonServer = true
-ScalaCompileOptions.metaClass.fork = true
-ScalaCompileOptions.metaClass.useAnt = false
-ScalaCompileOptions.metaClass.useCompileDaemon = false
-
+//ScalaCompileOptions.metaClass.daemonServer = true
+//ScalaCompileOptions.metaClass.fork = true
+//ScalaCompileOptions.metaClass.useAnt = false
+//ScalaCompileOptions.metaClass.useCompileDaemon = false
+/*
 ext {
   gatlingVersion = '3.8.4'
   scalaVersion = '2.13.9'
@@ -47,6 +47,8 @@ dependencies {
   gatling "io.gatling:gatling-app:${gatlingVersion}"
   gatling "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
 }
+
+ */
 
 gatling {
   gatlingVersion '3.8.4'
@@ -68,4 +70,4 @@ sourceSets {
 }
 
 
-ext ['netty.version'] = '4.0.51.Final'
+//ext ['netty.version'] = '4.0.51.Final'
