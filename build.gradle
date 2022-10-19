@@ -42,9 +42,6 @@ dependencies {
   gatling "org.scala-lang:scala-library:${scalaVersion}"
   gatling "io.gatling:gatling-app:${gatlingVersion}"
   gatling "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
-  //gatlingImplementation "groupio.rest-assured:rest-assured:4.3.1"
-  //gatling "com.warrenstrange:googleauth:1.5.0"
-  //gatling 'org.postgresql:postgresql:42.5.0'
 }
 
 gatling {
@@ -65,24 +62,6 @@ sourceSets {
     }
   }
 }
-
-test {
-  testLogging {
-    showStandardStreams = true
-  }
-  dependsOn("publishToMavenLocal")
-  systemProperty "com.github.lkishalmi.gatling.version", project.version
-}
-
-pluginBundle {
-  website = 'https://github.com/lkishalmi/gradle-gatling-plugin'
-  vcsUrl = 'https://github.com/lkishalmi/gradle-gatling-plugin'
-  description = 'Gatling Simulation Execution'
-  tags = ['gatling', 'load test', 'stress test', 'performance test', 'scala']
-
-
-}
-
 
 
 ext ['netty.version'] = '4.0.51.Final'
