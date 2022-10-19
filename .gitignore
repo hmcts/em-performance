@@ -1,10 +1,10 @@
 results/*
 .DS_Store
-.idea/
+.idea/**
 target/**
 *.iml
 *.project
-.gradle/
+.gradle/**
 build/**
 *.log
 out/**
