@@ -13,6 +13,17 @@ object Headers {
     "Connection" -> "keep-alive"
   )
 
+  val authenticateIdamPostHeader = Map(
+    "Accept" -> "*/*",
+    "Host" -> "idam-api.perftest.platform.hmcts.net",
+    "Content-Type" -> "application/x-www-form-urlencoded",
+    "Content-Length" -> "0",
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive"
+  )
+
+
+
   /*DM Store Post Document Header
   serviceauthorization value obtained from Authentication */
   val dmStorePostDocumentHeader = Map(
@@ -41,6 +52,16 @@ object Headers {
     "Content-Type" -> "multipart/form-data",
     "Accept" -> "*/*",
     "Host" -> dmStoreHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive"
+  )
+
+  val docAssemblyConvertHeader = Map(
+    "serviceauthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Content-Type" -> "multipart/form-data",
+    "Accept" -> "*/*",
+    "Host" -> docAssenblyHost,
     "Accept-Encoding" -> "gzip, deflate, br",
     "Connection" -> "keep-alive"
   )
