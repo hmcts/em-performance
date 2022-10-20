@@ -124,8 +124,7 @@ class DMStoreAPI extends Simulation {
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker"))
-      //.exec(DMStore.DMStoreDocumentUpload("GET_DATA_PREP"))
-     .exec(DMStore.DMStoreDocumentUploadSelector("GET"))
+      .exec(DMStore.DMStoreDocumentUploadSelector("GET_DATA_PREP"))
 
     }
 
