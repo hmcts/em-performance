@@ -5,16 +5,15 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.{Authentication, DMStore}
+import requests.{Authentication, DMStore, DocAssembly}
 import utils.Environment._
+
 import scala.concurrent.duration._
 import scala.language.postfixOps
-//import utils.JDBCConnection
-//import sqlQueries.sqlDMStore._
 
-class DMStoreAPI extends Simulation {
 
-  val dmBaseURL = dmStoreURL
+class DocAssemblyAPI extends Simulation {
+
 
   /* TEST TYPE DEFINITION */
   /* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -39,24 +38,17 @@ class DMStoreAPI extends Simulation {
   val rampDownDurationMins = 5
   val testDurationMins = 60
   /*Hourly Volumes for DM Store requests*/
-  val docUploadHourlyTarget:Double = 10000
-  val docDownloadHourlyTarget:Double = 50000
-  val docDownloadBinaryHourlyTarget:Double = 40000
+  val docAssemblyConvert:Double = 600
+
   /*Rate Per Second Volume for DM Store Requests */
-  val docUploadRatePerSec = docUploadHourlyTarget / 3600
-  val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
-  val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
+  val docAssemblyConvertRatePerSec = docAssemblyConvert / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
 
   /* SIMULATION FEEDER FILES - KNOW THAT THESE FEEDERS WORK BUT TRYING TO USE SQLFEEDERS INSTEAD*/
-  val DMDocumentDownloadFeeder = csv("feeders/GETDocument.csv").random
-  val DMDocumentDownloadBinaryFeeder = csv("feeders/GETDocumentBinary.csv").random
-  val DMDocumentDeleteFeeder = csv("feeders/DELETEDocument.csv").random
-  /* JDBC Feeder for valid documents to be downloaded */
-  //val sqlDocumentDownloadFeeder = JDBCConnection.connString("EVIDENCE",sqlGetDownloadDocuments).circular
-  //val sqlDocumentDeleteFeeder = JDBCConnection.connString("EVIDENCE", sqlDeleteDocuments)
+  val DocAssemblyConvertFeeder = csv("feeders/POSTDocAssemblyConvert.csv").random
+
 
 
   //If running in debug mode, disable pauses between steps
@@ -72,10 +64,11 @@ class DMStoreAPI extends Simulation {
   /* ******************************** */
 
   val httpProtocol = HttpProtocol
-    .baseUrl(dmBaseURL)
+    .baseUrl(docAssemblyURL)
     .doNotTrackHeader("1")
     .inferHtmlResources()
     .silentResources
+
 
   before{
     println(s"Test Type: ${testType}")
@@ -117,56 +110,22 @@ class DMStoreAPI extends Simulation {
     }
   }
 
-  /* DM STORE SCENARIOS*/
+  /* DOC ASSEMBLY SCENARIOS*/
 
-  //scenario for DM Store Document Upload
-  val ScnDMStoreDocUpload = scenario("DMStore Document Upload")
+  //scenario for DocAssembly Convert Document
+  val ScnDocAssemblyConvert = scenario("DocAssembly Document Convert")
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
+      .feed(DocAssemblyConvertFeeder)
       .exec(Authentication.S2SAuth("Caseworker"))
-      //.exec(DMStore.DMStoreDocumentUpload("GET_DATA_PREP"))
-     .exec(DMStore.DMStoreDocumentUploadSelector("GET"))
-
+      .exec(Authentication.IdamAuth("Caseworker"))
+      .exec(DocAssembly.DocAssemblyConvert)
     }
 
-  //scenario for DM Store Document Download
-  val ScnDMStoreDocDownload = scenario("DMStore Document Download")
-    .exitBlockOnFail {
-      exec(_.set("env", s"${env}"))
-      .exec(Authentication.S2SAuth("Caseworker"))
-      .feed(DMDocumentDownloadFeeder)
-      //.feed(sqlDocumentDownloadFeeder)
-      .exec(DMStore.DMStoreDocDownload)
-    }
-
-  //scenario for DM Store Document Download Binary
-  val ScnDMStoreDocDownloadBinary = scenario("DMStore Document Download Binary")
-    .exitBlockOnFail {
-      exec(_.set("env", s"${env}"))
-      .exec(Authentication.S2SAuth("Caseworker"))
-      .feed(DMDocumentDownloadBinaryFeeder)
-      //.feed(sqlDocumentDownloadFeeder)
-      .exec(DMStore.DMStoreDocDownloadBinary)
-    }
-
-  //scenario for DM Store Delete Document
-  val ScnDMStoreDocDelete = scenario("DMStore Document Delete")
-    .exitBlockOnFail {
-      exec(_.set("env", s"${env}"))
-        .exec(Authentication.S2SAuth("Caseworker"))
-        //.feed(sqlDocumentDeleteFeeder)
-        .feed(DMDocumentDeleteFeeder)
-        .exec(DMStore.DMStoreDocDelete)
-    }
-
-
-
-  /*DM STORE SIMULATIONS */
+  /*Doc Assembly SIMULATIONS */
 
   setUp(
-    ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
