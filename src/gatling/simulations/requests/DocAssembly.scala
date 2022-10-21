@@ -20,7 +20,8 @@ object DocAssembly {
     group("DocAssembly_DocConvert") {
       exec(http("POST_DocAssemblyConvert")
         .post(docAssemblyURL + "/api/convert/#{documentId}")
-        .headers(docAssemblyConvertHeader))
+        .headers(docAssemblyConvertHeader)
+        .check(bodyBytes.transform(_.size > 100).is(true)))
     }
 
 }

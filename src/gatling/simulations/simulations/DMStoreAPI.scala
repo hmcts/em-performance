@@ -120,7 +120,7 @@ class DMStoreAPI extends Simulation {
   val ScnDMStoreDocUpload = scenario("DMStore Document Upload")
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
-      .exec(Authentication.S2SAuth("Caseworker"))
+      .exec(Authentication.S2SAuth("Caseworker", "CCD"))
       .exec(DMStore.DMStoreDocumentUploadSelector("GET_DATA_PREP"))
 
     }
@@ -129,7 +129,7 @@ class DMStoreAPI extends Simulation {
   val ScnDMStoreDocDownload = scenario("DMStore Document Download")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-      .exec(Authentication.S2SAuth("Caseworker"))
+      .exec(Authentication.S2SAuth("Caseworker", "CCD"))
       .feed(DMDocumentDownloadFeeder)
       .exec(DMStore.DMStoreDocDownload)
     }
@@ -138,7 +138,7 @@ class DMStoreAPI extends Simulation {
   val ScnDMStoreDocDownloadBinary = scenario("DMStore Document Download Binary")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-      .exec(Authentication.S2SAuth("Caseworker"))
+      .exec(Authentication.S2SAuth("Caseworker","CCD"))
       .feed(DMDocumentDownloadBinaryFeeder)
       .exec(DMStore.DMStoreDocDownloadBinary)
     }
@@ -147,7 +147,7 @@ class DMStoreAPI extends Simulation {
   val ScnDMStoreDocDelete = scenario("DMStore Document Delete")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-        .exec(Authentication.S2SAuth("Caseworker"))
+        .exec(Authentication.S2SAuth("Caseworker","CCD"))
         .feed(DMDocumentDeleteFeeder)
         .exec(DMStore.DMStoreDocDelete)
     }

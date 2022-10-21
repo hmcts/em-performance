@@ -31,15 +31,18 @@ object DMStore {
         || session("filePrefix").as[String].equals("TEST"))
       {
         randomSwitch(80d -> exec(_.set("fileSize", "2")),
-            10d -> exec(_.set("fileSize", "5")),
-            5d -> exec(_.set("fileSize", "10")),
-            3d -> exec(_.set("fileSize", "25")),
-            2d -> exec(_.set("fileSize", "50")))
+                                10d -> exec(_.set("fileSize", "5")),
+                                 5d -> exec(_.set("fileSize", "10")),
+                                 3d -> exec(_.set("fileSize", "25")),
+                                 2d -> exec(_.set("fileSize", "50")))
           .exec(DMStoreDocumentUpload)
       }
       .doIf(session => session("filePrefix").as[String].equals("DOC_ASSEMBLY"))
       {
-        exec(_.set("fileSize", "0.5"))
+        randomSwitch(60d -> exec(_.set("fileSize", "0.5")),
+                                20d -> exec(_.set("fileSize", "1")),
+                                15d -> exec(_.set("fileSize", "5")),
+                                 5d -> exec(_.set("fileSize", "15")))
         .exec(DMStoreDocumentUpload)
       }
 
