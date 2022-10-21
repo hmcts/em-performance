@@ -117,7 +117,7 @@ class DocAssemblyAPI extends Simulation {
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
       .feed(DocAssemblyConvertFeeder)
-      .exec(Authentication.S2SAuth("Caseworker"))
+      .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
       .exec(Authentication.IdamAuth("Caseworker"))
       .exec(DocAssembly.DocAssemblyConvert)
     }

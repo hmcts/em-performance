@@ -59,7 +59,6 @@ object Headers {
   val docAssemblyConvertHeader = Map(
     "serviceauthorization" -> "#{authToken}",
     "Authorization" -> "Bearer #{bearerToken}",
-    "Content-Type" -> "multipart/form-data",
     "Accept" -> "*/*",
     "Host" -> docAssenblyHost,
     "Accept-Encoding" -> "gzip, deflate, br",
