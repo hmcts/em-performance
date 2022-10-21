@@ -69,7 +69,7 @@ object DMStore {
       val DMStoreDocDownload =
 
         group("DMStore_DocDownload") {
-          exec(http("GET_Documents")
+          exec(http("GET_Documents_#{fileSize}")
             .get(dmStoreURL + "/documents/#{documentId}")
             .headers(dmStoreGetDocumentHeader)
             .check(jsonPath("$._links.self.href").is(dmStoreURL + "/documents/#{documentId}")))
@@ -84,7 +84,7 @@ object DMStore {
       val DMStoreDocDownloadBinary =
 
         group("DMStore_DocDownloadBinary") {
-          exec(http("GET_Documents_binary")
+          exec(http("GET_Documents_binary_#{fileSize}")
             .get(dmStoreURL + "/documents/#{documentId}/binary")
             .headers(dmStoreGetDocumentHeader)
             .check(bodyBytes.transform(_.size > 100).is(true)))

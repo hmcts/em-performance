@@ -9,8 +9,7 @@ import requests.{Authentication, DMStore}
 import utils.Environment._
 import scala.concurrent.duration._
 import scala.language.postfixOps
-//import utils.JDBCConnection
-//import sqlQueries.sqlDMStore._
+
 
 class DMStoreAPI extends Simulation {
 
@@ -51,12 +50,10 @@ class DMStoreAPI extends Simulation {
   val numberOfPipelineUsers = 1
 
   /* SIMULATION FEEDER FILES - KNOW THAT THESE FEEDERS WORK BUT TRYING TO USE SQLFEEDERS INSTEAD*/
-  val DMDocumentDownloadFeeder = csv("feeders/GETDocument.csv").random
-  val DMDocumentDownloadBinaryFeeder = csv("feeders/GETDocumentBinary.csv").random
+  val DMDocumentDownloadFeeder = csv("feeders/GET_DocumentData.csv").circular
+  val DMDocumentDownloadBinaryFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDeleteFeeder = csv("feeders/DELETEDocument.csv").random
-  /* JDBC Feeder for valid documents to be downloaded */
-  //val sqlDocumentDownloadFeeder = JDBCConnection.connString("EVIDENCE",sqlGetDownloadDocuments).circular
-  //val sqlDocumentDeleteFeeder = JDBCConnection.connString("EVIDENCE", sqlDeleteDocuments)
+
 
 
   //If running in debug mode, disable pauses between steps
@@ -134,7 +131,6 @@ class DMStoreAPI extends Simulation {
       exec(_.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker"))
       .feed(DMDocumentDownloadFeeder)
-      //.feed(sqlDocumentDownloadFeeder)
       .exec(DMStore.DMStoreDocDownload)
     }
 
@@ -144,7 +140,6 @@ class DMStoreAPI extends Simulation {
       exec(_.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker"))
       .feed(DMDocumentDownloadBinaryFeeder)
-      //.feed(sqlDocumentDownloadFeeder)
       .exec(DMStore.DMStoreDocDownloadBinary)
     }
 
@@ -153,7 +148,6 @@ class DMStoreAPI extends Simulation {
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker"))
-        //.feed(sqlDocumentDeleteFeeder)
         .feed(DMDocumentDeleteFeeder)
         .exec(DMStore.DMStoreDocDelete)
     }
