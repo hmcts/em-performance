@@ -4,8 +4,8 @@ plugins {
   id 'io.gatling.gradle' version '3.8.4'
 }
 
-sourceCompatibility = "17"
-targetCompatibility = "17"
+sourceCompatibility = "11"
+targetCompatibility = "11"
 
 tasks.withType(JavaExec) {
   // Configure the size of the JVM if necessary
@@ -30,8 +30,8 @@ gatling {
   gatlingVersion '3.8.4'
   scalaVersion '2.13.9'
   simulations = {
-    include "simulations/DMStoreAPI.scala"
-    //include "simulations/DocAssemblyAPI.scala"
+    //include "simulations/DMStoreAPI.scala"
+    include "simulations/DocAssemblyAPI.scala"
   }
 }
 
