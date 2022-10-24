@@ -23,9 +23,14 @@ object Authentication {
     })
 
       .exec(http("IdamAuthentication")
-        .post(IdamURL + "/o/token?grant_type=password&scope=openid%20profile%20roles%20openid%20roles%20profile" +
-          "&username=#{userId}&password=#{passwordCCD}&client_id=ccd_gateway&client_secret=" + clientSecret)
-        .headers(authenticateIdamPostHeader)
+        .post(IdamURL + "/o/token")
+        .formParam("grant_type", "password")
+        .formParam("username", "${emailAddressCCD}")
+        .formParam("password", "${passwordCCD}")
+        .formParam("client_id", "ccd_gateway")
+        .formParam("client_secret", clientSecret)
+        .formParam("scope", "openid profile roles openid roles profile")
+        .header("Content-Type", "application/x-www-form-urlencoded")
         .check(jsonPath("$.access_token").saveAs("bearerToken")))
 
   /*  S2S Authentication request to rpe service and returns a token
