@@ -9,7 +9,7 @@ properties([
 ])
 
 //@Library("Infrastructure") _
-@Library("Infrastructure@fix-jenkins-upload-to-blob") _
+@Library("Infrastructure@nightly-dev") _
 
 def product = "em"
 def component = "performance"
