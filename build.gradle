@@ -31,6 +31,7 @@ gatling {
   scalaVersion '2.13.9'
   simulations = {
     include "simulations/DMStoreAPI.scala"
+    //include "simulations/DocAssemblyAPI.scala"
   }
 }
 

@@ -9,6 +9,10 @@ object Environment {
   val dmStoreHost = "dm-store-#{env}.service.core-compute-#{env}.internal"
   val rpeAPIURL = "http://rpe-service-auth-provider-#{env}.service.core-compute-#{env}.internal"
   val rpeHost = "rpe-service-auth-provider-#{env}.service.core-compute-#{env}.internal"
+  val docAssemblyURL = "http://dg-docassembly-#{env}.service.core-compute-#{env}.internal"
+  val docAssenblyHost = "dg-docassembly-#{env}.service.core-compute-#{env}.internal"
+  val IdamURL = "https://idam-api.#{env}.platform.hmcts.net"
+  val IdamHost = "idam-api.#{env}.platform.hmcts.net"
 
   val HttpProtocol = http
 
