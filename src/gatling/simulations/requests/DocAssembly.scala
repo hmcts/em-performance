@@ -18,7 +18,7 @@ object DocAssembly {
   val DocAssemblyConvert =
 
     group("DocAssembly_DocConvert") {
-      exec(http("POST_DocAssemblyConvert")
+      exec(http("POST_DocAssemblyConvert_#{fileSize}")
         .post(docAssemblyURL + "/api/convert/#{documentId}")
         .headers(docAssemblyConvertHeader)
         .check(bodyBytes.transform(_.size > 100).is(true)))
