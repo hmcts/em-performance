@@ -31,6 +31,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 withNightlyPipeline("java", product, component) {
 
+    loadVaultSecrets(secrets)
+
     enablePerformanceTest()
 
 //    after('performanceTest') {
