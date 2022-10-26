@@ -28,7 +28,7 @@ object Headers {
   /*DM Store Get Document Header
     serviceauthorization, userRole and userId value obtained from Authentication*/
   val dmStoreGetDocumentHeader = Map(
-    //"serviceauthorization" -> "#{authToken}",
+    "ServiceAuthorization" -> "#{authToken}",
     "Accept" -> "*/*",
     "Host" -> dmStoreHost,
     "Accept-Encoding" -> "gzip, deflate, br",
@@ -54,6 +54,17 @@ object Headers {
     "Accept-Encoding" -> "gzip, deflate, br",
     "Connection" -> "keep-alive"
   )
+
+  val dmStoreUpdateDocumentHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Accept" -> "*/*",
+    "Host" -> dmStoreHost,
+    "Content-Type" -> "application/json",
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    "user-id" -> "#{userId}",
+  )
+
 
 
 
