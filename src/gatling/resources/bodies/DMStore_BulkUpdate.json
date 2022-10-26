@@ -1,0 +1,13 @@
+{
+  "ttl": "#{ttlDate}T#{ttlTime}+0000",
+  "documents": [
+    {
+      "documentId": "#{documentId}",
+      "metadata": {
+        "additionalProp1": "MetaData1_#{ttlDate}_#{ttlTime}",
+        "additionalProp2": "MetaData2_#{ttlDate}_#{ttlTime}",
+        "additionalProp3": "MetaData3_#{ttlDate}_#{ttlTime}"
+      }
+    }
+  ]
+}

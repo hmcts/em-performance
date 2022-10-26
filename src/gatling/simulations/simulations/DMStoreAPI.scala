@@ -41,10 +41,12 @@ class DMStoreAPI extends Simulation {
   val docUploadHourlyTarget:Double = 10000
   val docDownloadHourlyTarget:Double = 50000
   val docDownloadBinaryHourlyTarget:Double = 40000
+  val docUpdateHourlyTarget:Double = 7500
   /*Rate Per Second Volume for DM Store Requests */
   val docUploadRatePerSec = docUploadHourlyTarget / 3600
   val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
+  val docUpdateRatePerSec = docUpdateHourlyTarget / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -53,6 +55,7 @@ class DMStoreAPI extends Simulation {
   val DMDocumentDownloadFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDownloadBinaryFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDeleteFeeder = csv("feeders/DELETEDocument.csv").random
+  val DMDocumentUpdateFeeder = csv("feeders/GET_DocumentData.csv").random
 
 
 
@@ -152,6 +155,15 @@ class DMStoreAPI extends Simulation {
         .exec(DMStore.DMStoreDocDelete)
     }
 
+  //scenario for DM Store Bulk Update Document
+  val ScnDMStoreUpdateDocument = scenario("DMStore Document Update")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "CCD"))
+        .feed(DMDocumentUpdateFeeder)
+        .exec(DMStore.DMStoreUpdateDoc)
+    }
+
 
 
   /*DM STORE SIMULATIONS */
@@ -159,7 +171,8 @@ class DMStoreAPI extends Simulation {
   setUp(
     ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
