@@ -122,8 +122,8 @@ object DMStore {
 
     group("DMStore_BulkUpdate") {
       exec(session => {
-        val formattedDate = Common.currentDate("yyyy-MM-dd")
-        val formattedTime = Common.currentTime("HH:mm:ss")
+        val formattedDate = Common.currentDateTime("yyyy-MM-dd")
+        val formattedTime = Common.currentDateTime("HH:mm:ss")
         session.setAll("ttlDate" -> formattedDate, "ttlTime" -> formattedTime)
       })
       .exec(http("PATCH_BulkUpdate")
