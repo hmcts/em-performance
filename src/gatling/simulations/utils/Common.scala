@@ -47,17 +47,13 @@ object Common {
     randomString(2).toUpperCase() + rnd.nextInt(10).toString + " " + rnd.nextInt(10).toString + randomString(2).toUpperCase()
   }
 
-  // returns a date in format specified in the input pattern e.g. 'yyyy-MM-dd'
-  def currentDate(pattern:String): String = {
-    val currentDateFormatted = LocalDateTime.now.format(DateTimeFormatter.ofPattern(pattern))
-    currentDateFormatted
+  // returns the current date or time in format specified in the input pattern e.g. 'yyyy-MM-dd' or 'HH:mm:ss'
+  def currentDateTime(pattern:String): String = {
+    val currentDateTimeFormatted = LocalDateTime.now.format(DateTimeFormatter.ofPattern(pattern))
+    currentDateTimeFormatted
   }
 
-  // returns current time in format specified in the input pattern eg 'HH:mm:ss'
-  def currentTime(pattern:String): String = {
-    val currentTimeFormatted = LocalDateTime.now.format(DateTimeFormatter.ofPattern(pattern))
-    currentTimeFormatted
-  }
+
 
 
 
