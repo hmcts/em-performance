@@ -24,11 +24,13 @@ object DMStore {
       case "DELETE_DATA_PREP" => session.set("filePrefix", "DELETE").set("fileType", "pdf")
       case "GET_DATA_PREP" => session.set("filePrefix", "GET").set("fileType", "pdf")
       case "DOC_ASSEMBLY_DATA_PREP" => session.set("filePrefix", "DOC_ASSEMBLY").set("fileType", "docx")
+      case "ANNOTATION_DATA_PREP" => session.set("filePrefix", "ANNO").set("fileType", "pdf")
       case _ => session.set("filePrefix", "TEST").set("fileType", "pdf")
     })
       .doIf(session => session("filePrefix").as[String].equals("GET")
         || session("filePrefix").as[String].equals("DELETE")
-        || session("filePrefix").as[String].equals("TEST"))
+        || session("filePrefix").as[String].equals("TEST")
+        || session("filePrefix").as[String].equals("ANNO"))
       {
         randomSwitch(80d -> exec(_.set("fileSize", "2")),
                                 10d -> exec(_.set("fileSize", "5")),
