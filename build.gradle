@@ -30,8 +30,7 @@ gatling {
   gatlingVersion '3.8.4'
   scalaVersion '2.13.9'
   simulations = {
-    //include "simulations/DMStoreAPI.scala"
-    include "simulations/DocAssemblyAPI.scala"
+    include "simulations/EMTest.scala"
   }
 }
 
