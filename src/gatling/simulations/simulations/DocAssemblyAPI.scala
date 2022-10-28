@@ -122,6 +122,17 @@ class DocAssemblyAPI extends Simulation {
       .exec(DocAssembly.DocAssemblyConvert)
     }
 
+  val ScnDocAssemblyRenderTemplate = scenario("DocAssembly Render Template")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(DocAssembly.DocAssemblyRenderTemplate)
+    }
+
+
+
+
   /*Doc Assembly SIMULATIONS */
 
   setUp(

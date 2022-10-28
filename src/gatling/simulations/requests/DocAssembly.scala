@@ -24,6 +24,15 @@ object DocAssembly {
         .check(bodyBytes.transform(_.size > 100).is(true)))
     }
 
+
+  val DocAssemblyRenderTemplate =
+
+    group("DocAssembly_RenderTemplate") {
+      exec(http("POST_DocAssemblyRenderTemplate")
+        .post(docAssemblyURL + "/api/template-renditions")
+        .headers(docAssemblyConvertHeader))
+    }
+
 }
 
 

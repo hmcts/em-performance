@@ -1,0 +1,13 @@
+{
+  "jwt": "string",
+  "serviceAuth": "string",
+  "templateId": "string",
+  "formPayload": {},
+  "outputType": "PDF",
+  "renditionOutputLocation": "string",
+  "outputFilename": "string",
+  "secureDocStoreEnabled": true,
+  "caseTypeId": "string",
+  "jurisdictionId": "string",
+  "hashToken": "string"
+}
