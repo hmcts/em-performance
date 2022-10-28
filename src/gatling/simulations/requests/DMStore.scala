@@ -2,6 +2,7 @@ package requests
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef.{RawFileBodyPart, _}
+import utils.Common
 import utils.Environment._
 import utils.Headers._
 
@@ -111,7 +112,33 @@ object DMStore {
             .check(status is 204))
         }
 
+
+  /* PATCH /documents request to DM Store.  Updates the TTL value on any document in the doc store
+  The request requires an S2SToken so Authentication.S2SAuth should be called prior to running this request.
+  The S2SToken is sent within the dmStoreUpdateDocumentHeader
+  #{documentId} variable is assigned from the feeder file.  The feeder is defined in the Simulation file.
+  Response code returned must be 200 for the Update and also a json success payload.
+*/
+
+    val DMStoreUpdateDoc =
+
+    group("DMStore_BulkUpdate") {
+      exec(session => {
+        val formattedDate = Common.currentDateTime("yyyy-MM-dd")
+        val formattedTime = Common.currentDateTime("HH:mm:ss")
+        session.setAll("ttlDate" -> formattedDate, "ttlTime" -> formattedTime)
+      })
+      .exec(http("PATCH_BulkUpdate")
+        .patch(dmStoreURL + "/documents")
+        .body(ElFileBody("bodies/DMStore_BulkUpdate.json")).asJson
+        .headers(dmStoreUpdateDocumentHeader)
+        .check(regex("Success")))
     }
+
+
+
+
+}
 
 
 

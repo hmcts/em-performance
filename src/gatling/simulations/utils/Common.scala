@@ -3,6 +3,13 @@ package utils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
+import java.time._
+import java.text.SimpleDateFormat
+import java.util.Calendar
+
+
+
+
 
 object Common {
 
@@ -13,6 +20,7 @@ object Common {
   val patternYear = DateTimeFormatter.ofPattern("yyyy")
   val patternDate = DateTimeFormatter.ofPattern("yyyyMMdd")
 
+
   def randomString(length: Int) = {
     rnd.alphanumeric.filter(_.isLetter).take(length).mkString
   }
@@ -20,6 +28,7 @@ object Common {
   def getDate(): String = {
     now.format(patternDate)
   }
+
 
   def getDay(): String = {
     (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
@@ -37,5 +46,15 @@ object Common {
   def getPostcode(): String = {
     randomString(2).toUpperCase() + rnd.nextInt(10).toString + " " + rnd.nextInt(10).toString + randomString(2).toUpperCase()
   }
+
+  // returns the current date or time in format specified in the input pattern e.g. 'yyyy-MM-dd' or 'HH:mm:ss'
+  def currentDateTime(pattern:String): String = {
+    val currentDateTimeFormatted = LocalDateTime.now.format(DateTimeFormatter.ofPattern(pattern))
+    currentDateTimeFormatted
+  }
+
+
+
+
 
 }
