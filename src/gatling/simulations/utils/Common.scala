@@ -4,8 +4,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
 import java.time._
-import java.text.SimpleDateFormat
-import java.util.Calendar
 
 
 
@@ -51,6 +49,22 @@ object Common {
   def currentDateTime(pattern:String): String = {
     val currentDateTimeFormatted = LocalDateTime.now.format(DateTimeFormatter.ofPattern(pattern))
     currentDateTimeFormatted
+  }
+
+  //returns an double value between a min and max value
+  def getRandomNumberDoubleBetweenValues(minNumber:Int, maxNumber:Int): Double = {
+    val rand = new scala.util.Random
+    val randNumber = rand.between(minNumber,maxNumber).asInstanceOf[Double]
+    println("the number is " + randNumber)
+    randNumber
+  }
+
+  //returns an double value between a min and max value
+  def getRandomNumberIntBetweenValues(minNumber: Int, maxNumber: Int): Int = {
+    val rand = new scala.util.Random
+    val randNumber = rand.between(minNumber, maxNumber).asInstanceOf[Int]
+    println("the number is " + randNumber)
+    randNumber
   }
 
 
