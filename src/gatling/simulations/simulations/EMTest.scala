@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.{Authentication, DMStore, DocAssembly}
+import requests.{Annotations, Authentication, DMStore, DocAssembly}
 import utils.Environment._
 
 import scala.concurrent.duration._
@@ -53,9 +53,14 @@ class EMTest extends Simulation {
   val docDeleteRatePerSec = docDeleteHourlyTarget / 3600
 
   /*Hourly Volumes for Doc Assembly requests*/
-  val docAssemblyConvert: Double = 600
+  val docAssemblyConvertHourlyTarget: Double = 600
   /*Rate Per Second Volume for DM Store Requests */
-  val docAssemblyConvertRatePerSec = docAssemblyConvert / 3600
+  val docAssemblyConvertRatePerSec = docAssemblyConvertHourlyTarget / 3600
+
+  /*Hourly Volumes for Annotations requests*/
+  val AnnoCreateBookmarkHourlyTarget: Double = 600
+  /*Rate Per Second Volume for DM Store Requests */
+  val AnnoCreateBookmarkRatePerSec = AnnoCreateBookmarkHourlyTarget / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -68,6 +73,8 @@ class EMTest extends Simulation {
   val DMDocumentUpdateFeeder = csv("feeders/GET_DocumentData.csv").random
   /* Doc Assembly */
   val DocAssemblyConvertFeeder = csv("feeders/POSTDocAssemblyConvert.csv").random
+  /* Annotations */
+  val AnnoCreateBookmarkFeeder = csv("feeders/ANNO_DocumentData.csv").circular
 
 
   //If running in debug mode, disable pauses between steps
@@ -175,9 +182,6 @@ class EMTest extends Simulation {
         .exec(DMStore.DMStoreUpdateDoc)
     }
 
-
-
-
   //scenario for DocAssembly Convert Document
   val ScnDocAssemblyConvert = scenario("DocAssembly Document Convert")
     .exitBlockOnFail {
@@ -186,6 +190,16 @@ class EMTest extends Simulation {
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
         .exec(DocAssembly.DocAssemblyConvert)
+    }
+
+  //scenario for Annotations Create Bookmark
+  val ScnAnnoCreateBookmark = scenario("Annotations Create Bookmark")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(Annotations.AnnoCreateBookmark)
     }
 
 
@@ -200,7 +214,9 @@ class EMTest extends Simulation {
     ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //DocAssembly Simulations
-    ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //Annotations Simulations
+    ScnAnnoCreateBookmark.inject(simulationProfile(testType, AnnoCreateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
