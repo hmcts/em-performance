@@ -5,8 +5,9 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.{Authentication, DMStore}
+import requests.{Authentication, DMStore, DocAssembly}
 import utils.Environment._
+
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -37,6 +38,7 @@ class EMTest extends Simulation {
   val rampUpDurationMins = 5
   val rampDownDurationMins = 5
   val testDurationMins = 60
+
   /*Hourly Volumes for DM Store requests*/
   val docUploadHourlyTarget:Double = 10000
   val docDownloadHourlyTarget:Double = 50000
@@ -48,15 +50,22 @@ class EMTest extends Simulation {
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
   val docUpdateRatePerSec = docUpdateHourlyTarget / 3600
 
+  /*Hourly Volumes for Doc Assembly requests*/
+  val docAssemblyConvert: Double = 600
+  /*Rate Per Second Volume for DM Store Requests */
+  val docAssemblyConvertRatePerSec = docAssemblyConvert / 3600
+
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
 
-  /* SIMULATION FEEDER FILES - KNOW THAT THESE FEEDERS WORK BUT TRYING TO USE SQLFEEDERS INSTEAD*/
+  /* SIMULATION FEEDER FILES */
+  /* DM Store */
   val DMDocumentDownloadFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDownloadBinaryFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDeleteFeeder = csv("feeders/DELETEDocument.csv").random
   val DMDocumentUpdateFeeder = csv("feeders/GET_DocumentData.csv").random
-
+  /* Doc Assembly */
+  val DocAssemblyConvertFeeder = csv("feeders/POSTDocAssemblyConvert.csv").random
 
 
   //If running in debug mode, disable pauses between steps
@@ -124,7 +133,7 @@ class EMTest extends Simulation {
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker", "CCD"))
-        .exec(DMStore.DMStoreDocumentUploadSelector("GET_DATA_PREP"))
+        .exec(DMStore.DMStoreDocumentUploadSelector("TEST"))
 
     }
 
@@ -165,14 +174,28 @@ class EMTest extends Simulation {
     }
 
 
+  //scenario for DocAssembly Convert Document
+  val ScnDocAssemblyConvert = scenario("DocAssembly Document Convert")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(DocAssemblyConvertFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(DocAssembly.DocAssemblyConvert)
+    }
 
-  /*DM STORE SIMULATIONS */
+
+
+  /*EM STORE SIMULATIONS */
 
   setUp(
+    //DM Store Simulations
     ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //DocAssembly Simulations
+    ScnDocAssemblyConvert.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
