@@ -96,10 +96,10 @@ object DMStore {
             .check(bodyBytes.transform(_.size > 100).is(true)))
         }
 
-      /* DELETE /documents request to DM Store.  Deletes the document from DM Store
+      /* DELETE /documents request to DM Store.  Deletes the document (soft delete) from DM Store and until the
       The request requires an S2SToken so Authentication.S2SAuth should be called prior to running this request.
       The S2SToken is sent within the dmStoreDeleteDocumentHeader
-      #{documentId} variable is assigned from the sql feeder file.  The feeder is defined in the Simulation file.
+      #{documentId} variable is assigned from the DELETE_DocumentData.csv feeder file.  The feeder is defined in the Simulation file.
       Response code returned must be 204 for the DELETE.
    */
 
