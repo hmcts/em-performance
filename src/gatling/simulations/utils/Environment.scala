@@ -13,6 +13,8 @@ object Environment {
   val docAssenblyHost = "dg-docassembly-#{env}.service.core-compute-#{env}.internal"
   val IdamURL = "https://idam-api.#{env}.platform.hmcts.net"
   val IdamHost = "idam-api.#{env}.platform.hmcts.net"
+  val annoAPIURL = "http://em-anno-#{env}.service.core-compute-#{env}.internal"
+  val annoHost = "em-anno-#{env}.service.core-compute-#{env}.internal"
 
   val HttpProtocol = http
 

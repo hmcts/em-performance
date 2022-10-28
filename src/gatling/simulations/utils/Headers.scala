@@ -64,6 +64,17 @@ object Headers {
     "user-id" -> "#{userId}",
   )
 
+  /*ANNOTATIONS HEADERS*/
+  val annoCreateBookmarkHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Accept" -> "*/*",
+    "Host" -> annoHost,
+    "Content-Type" -> "application/json",
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    "user-id" -> "#{userId}",
+  )
 
 
 
