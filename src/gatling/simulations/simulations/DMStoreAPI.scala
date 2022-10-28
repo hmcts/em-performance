@@ -42,11 +42,13 @@ class DMStoreAPI extends Simulation {
   val docDownloadHourlyTarget:Double = 50000
   val docDownloadBinaryHourlyTarget:Double = 40000
   val docUpdateHourlyTarget:Double = 7500
+  val docDeleteHourlyTarget:Double = 150
   /*Rate Per Second Volume for DM Store Requests */
   val docUploadRatePerSec = docUploadHourlyTarget / 3600
   val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
   val docUpdateRatePerSec = docUpdateHourlyTarget / 3600
+  val docDeleteRatePerSec = docDeleteHourlyTarget /3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -54,7 +56,7 @@ class DMStoreAPI extends Simulation {
   /* SIMULATION FEEDER FILES - KNOW THAT THESE FEEDERS WORK BUT TRYING TO USE SQLFEEDERS INSTEAD*/
   val DMDocumentDownloadFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDownloadBinaryFeeder = csv("feeders/GET_DocumentData.csv").circular
-  val DMDocumentDeleteFeeder = csv("feeders/DELETEDocument.csv").random
+  val DMDocumentDeleteFeeder = csv("feeders/DELETE_DocumentData.csv").random
   val DMDocumentUpdateFeeder = csv("feeders/GET_DocumentData.csv").random
 
 
@@ -169,10 +171,11 @@ class DMStoreAPI extends Simulation {
   /*DM STORE SIMULATIONS */
 
   setUp(
-    ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    //ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

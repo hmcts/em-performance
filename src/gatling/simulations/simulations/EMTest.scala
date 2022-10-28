@@ -44,11 +44,13 @@ class EMTest extends Simulation {
   val docDownloadHourlyTarget:Double = 50000
   val docDownloadBinaryHourlyTarget:Double = 40000
   val docUpdateHourlyTarget:Double = 7500
+  val docDeleteHourlyTarget: Double = 150
   /*Rate Per Second Volume for DM Store Requests */
   val docUploadRatePerSec = docUploadHourlyTarget / 3600
   val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
   val docUpdateRatePerSec = docUpdateHourlyTarget / 3600
+  val docDeleteRatePerSec = docDeleteHourlyTarget / 3600
 
   /*Hourly Volumes for Doc Assembly requests*/
   val docAssemblyConvert: Double = 600
@@ -62,7 +64,7 @@ class EMTest extends Simulation {
   /* DM Store */
   val DMDocumentDownloadFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDownloadBinaryFeeder = csv("feeders/GET_DocumentData.csv").circular
-  val DMDocumentDeleteFeeder = csv("feeders/DELETEDocument.csv").random
+  val DMDocumentDeleteFeeder = csv("feeders/DELETE_DocumentData.csv").random
   val DMDocumentUpdateFeeder = csv("feeders/GET_DocumentData.csv").random
   /* Doc Assembly */
   val DocAssemblyConvertFeeder = csv("feeders/POSTDocAssemblyConvert.csv").random
@@ -174,6 +176,8 @@ class EMTest extends Simulation {
     }
 
 
+
+
   //scenario for DocAssembly Convert Document
   val ScnDocAssemblyConvert = scenario("DocAssembly Document Convert")
     .exitBlockOnFail {
@@ -194,6 +198,7 @@ class EMTest extends Simulation {
     ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //DocAssembly Simulations
     ScnDocAssemblyConvert.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)

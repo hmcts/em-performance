@@ -39,7 +39,6 @@ object Headers {
 
   val dmStoreDeleteDocumentHeader = Map(
     "serviceauthorization" -> "#{authToken}",
-    "Content-Type" -> "multipart/form-data",
     "Accept" -> "*/*",
     "Host" -> dmStoreHost,
     "Accept-Encoding" -> "gzip, deflate, br",
