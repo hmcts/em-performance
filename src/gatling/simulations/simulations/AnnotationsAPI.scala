@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.Annotations.BookmarkService
+import requests.Annotations._
 import requests.{Authentication, DMStore}
 import utils.Environment._
 
@@ -39,10 +39,14 @@ class AnnotationsAPI extends Simulation {
   val rampUpDurationMins = 5
   val rampDownDurationMins = 5
   val testDurationMins = 60
-  /*Hourly Volumes for DM Store requests*/
-  val createBookmarkHourlyTarget:Double = 10000
-  /*Rate Per Second Volume for DM Store Requests */
-  val createBookmarkRatePerSec = createBookmarkHourlyTarget /3600
+  /*Hourly Volumes for Annotation requests*/
+  val createBookmarkHourlyTarget:Double = 250
+  val getBookmarksHourlyTarget:Double = 10000
+  val getMetadataHourlyTarget:Double = 10000
+  /*Rate Per Second Volume for Annotation Requests */
+  val createBookmarkRatePerSec = createBookmarkHourlyTarget / 3600
+  val getBookmarksRatePerSec = getBookmarksHourlyTarget / 3600
+  val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -108,7 +112,7 @@ class AnnotationsAPI extends Simulation {
     }
   }
 
-  /* DM STORE SCENARIOS*/
+  /* ANNOTATION SCENARIOS*/
 
   //scenario for DM Store Document Upload
   val ScnAnnoCreateBookmark = scenario("Annotations Create Bookmark")
@@ -118,7 +122,24 @@ class AnnotationsAPI extends Simulation {
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
         .exec(BookmarkService.BookmarkCreateBookmark)
+    }
 
+  val ScnAnnoGetBookmarks = scenario("Annotations Get Bookmarks")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(BookmarkService.BookmarkGetBookmarks)
+    }
+
+  val ScnAnnoGetMetadata = scenario("Annotations Get Metadata")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(MetadataService.MetadataGetMetadata)
     }
 
 
@@ -128,6 +149,8 @@ class AnnotationsAPI extends Simulation {
 
   setUp(
     ScnAnnoCreateBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

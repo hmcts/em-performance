@@ -17,7 +17,7 @@ object BookmarkService {
 
   val BookmarkCreateBookmark =
 
-    group("Annotations_CreateBookmark") {
+    group("Annotations_Bookmark") {
       exec(_.set("xBookmarkPosition", getRandomNumberDoubleBetweenValues(1, 100)).set("yBookmarkPosition", getRandomNumberDoubleBetweenValues(1, 100))
         .set("pageNumber", getRandomNumberIntBetweenValues(1, 5)))
         .exec(http("POST_Bookmark")
@@ -35,11 +35,11 @@ object BookmarkService {
 
   val BookmarkGetBookmarks =
 
-    group("Annotations_GetBookmarks") {
+    group("Annotations_Bookmark") {
        exec(http("GET_Bookmarks")
         .get(annoAPIURL + "/api/#{documentId}/bookmarks")
         .headers(annoCreateBookmarkHeader)
-        .check(status is 401))
+        .check(status is 404))
     }
 
 
@@ -49,7 +49,7 @@ object BookmarkService {
 
   val BookmarkDeleteMultipleBookmarks =
 
-    group("Annotations_DeleteMultipleBookmarks") {
+    group("Annotations_Bookmark") {
       exec(http("DELETE_Bookmarks")
         .get(annoAPIURL + "/api/bookmarks_multiple")
         .headers(annoCreateBookmarkHeader))
