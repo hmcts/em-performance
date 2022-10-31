@@ -20,8 +20,6 @@ object MetadataService {
         exec(http("GET_Metadata")
           .get(annoAPIURL + "/api/metadata/#{documentId}")
           .headers(annoGetMetadataHeader))
-          //.check(status is 201))
-          //.check(regex("#{documentId}")))
     }
 
 
