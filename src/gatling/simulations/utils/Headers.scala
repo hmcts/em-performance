@@ -54,6 +54,17 @@ object Headers {
     "Connection" -> "keep-alive"
   )
 
+  val docAssemblyRenderTemplateHeader = Map(
+    "serviceauthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Accept" -> "*/*",
+    "Host" -> docAssenblyHost,
+    "Content-Type" -> "application/json",
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    "user-id" -> "#{userId}"
+  )
+
   val dmStoreUpdateDocumentHeader = Map(
     "ServiceAuthorization" -> "#{authToken}",
     "Accept" -> "*/*",
