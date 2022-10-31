@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.Annotations.BookmarkService
+import requests.Annotations.{BookmarkService, MetadataService}
 import requests.{Authentication, DMStore, DocAssembly}
 import utils.Environment._
 
@@ -61,9 +61,11 @@ class EMTest extends Simulation {
   /*Hourly Volumes for Annotations requests*/
   val AnnoCreateBookmarkHourlyTarget: Double = 600
   val getBookmarksHourlyTarget:Double = 10000
+  val getMetadataHourlyTarget:Double = 10000
   /*Rate Per Second Volume for DM Store Requests */
   val AnnoCreateBookmarkRatePerSec = AnnoCreateBookmarkHourlyTarget / 3600
   val getBookmarksRatePerSec = getBookmarksHourlyTarget /3600
+  val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -214,6 +216,15 @@ class EMTest extends Simulation {
         .exec(BookmarkService.BookmarkGetBookmarks)
     }
 
+  val ScnAnnoGetMetadata = scenario("Annotations Get Metadata")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(MetadataService.MetadataGetMetadata)
+    }
+
 
 
   /*EM STORE SIMULATIONS */
@@ -229,7 +240,8 @@ class EMTest extends Simulation {
     ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //Annotations Simulations
     ScnAnnoCreateBookmark.inject(simulationProfile(testType, AnnoCreateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
