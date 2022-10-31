@@ -5,7 +5,8 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.{Annotations, Authentication, DMStore}
+import requests.Annotations.BookmarkService
+import requests.{Authentication, DMStore}
 import utils.Environment._
 
 import scala.concurrent.duration._
@@ -116,7 +117,7 @@ class AnnotationsAPI extends Simulation {
         .feed(AnnoCreateBookmarkFeeder)
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
-        .exec(Annotations.AnnoCreateBookmark)
+        .exec(BookmarkService.BookmarkCreateBookmark)
 
     }
 
