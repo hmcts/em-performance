@@ -9,6 +9,12 @@ import io.gatling.http.Predef._
 
 object BookmarkService {
 
+  /* POST request for creating a bookmark within a document.  The request requires both an S2S token and Idam token and this should be
+     called prior to the request being made.  The request also requires a page number and both x and y coordiantes for the bookmark to be created
+     and these are generated via functions and stored in session.  the x and y coordinates have ot be stored as double precision in the database
+     A feeder file was created with documents with prefix name "ANNO_EM_DMStore" and these documents can be used to create the bookmarks*/
+
+
   val BookmarkCreateBookmark =
 
     group("Annotations_CreateBookmark") {
@@ -21,6 +27,35 @@ object BookmarkService {
           .check(status is 201)
           .check(regex("#{documentId}")))
     }
+
+
+  /* GET request for retrieving all bookmarks associated with a document.  The request requires both an S2S token and Idam token and this should be
+      called prior to the request being made.  A feeder file was created with documents with prefix name "ANNO_EM_DMStore" and these
+      documents can be used to retrieve the bookmarks.  Azure metrics indicate that when a bookmark is not found, then a 401 is returned therefore a 401 is possible*/
+
+  val BookmarkGetBookmarks =
+
+    group("Annotations_GetBookmarks") {
+       exec(http("GET_Bookmarks")
+        .get(annoAPIURL + "/api/#{documentId}/bookmarks")
+        .headers(annoCreateBookmarkHeader)
+        .check(status is 401))
+    }
+
+
+  /* DELETE request for multiple existing bookmark objects.  The request requires both an S2S token and Idam token and this should be
+      called prior to the request being made.  A feeder file was created with documents with prefix name "ANNO_EM_DMStore" and these
+      documents can be used to retrieve the bookmarks.  The document delete function needs a page number and x and y coordiantes  */
+
+  val BookmarkDeleteMultipleBookmarks =
+
+    group("Annotations_DeleteMultipleBookmarks") {
+      exec(http("DELETE_Bookmarks")
+        .get(annoAPIURL + "/api/bookmarks_multiple")
+        .headers(annoCreateBookmarkHeader))
+    }
+
+
 
 
 }

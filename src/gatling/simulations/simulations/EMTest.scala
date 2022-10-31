@@ -60,8 +60,10 @@ class EMTest extends Simulation {
 
   /*Hourly Volumes for Annotations requests*/
   val AnnoCreateBookmarkHourlyTarget: Double = 600
+  val getBookmarksHourlyTarget:Double = 10000
   /*Rate Per Second Volume for DM Store Requests */
   val AnnoCreateBookmarkRatePerSec = AnnoCreateBookmarkHourlyTarget / 3600
+  val getBookmarksRatePerSec = getBookmarksHourlyTarget /3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -203,6 +205,15 @@ class EMTest extends Simulation {
         .exec(BookmarkService.BookmarkCreateBookmark)
     }
 
+  val ScnAnnoGetBookmarks = scenario("Annotations Get Bookmarks")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(BookmarkService.BookmarkGetBookmarks)
+    }
+
 
 
   /*EM STORE SIMULATIONS */
@@ -217,7 +228,8 @@ class EMTest extends Simulation {
     //DocAssembly Simulations
     ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //Annotations Simulations
-    ScnAnnoCreateBookmark.inject(simulationProfile(testType, AnnoCreateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnAnnoCreateBookmark.inject(simulationProfile(testType, AnnoCreateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
