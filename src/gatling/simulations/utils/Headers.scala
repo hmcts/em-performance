@@ -87,6 +87,17 @@ object Headers {
     "user-id" -> "#{userId}",
   )
 
+  val annoGetMetadataHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Accept" -> "*/*",
+    "Host" -> annoHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    //"user-id" -> "#{userId}",
+  )
+
+
 
 
 
