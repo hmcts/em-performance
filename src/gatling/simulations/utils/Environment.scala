@@ -15,6 +15,8 @@ object Environment {
   val IdamHost = "idam-api.#{env}.platform.hmcts.net"
   val annoAPIURL = "http://em-anno-#{env}.service.core-compute-#{env}.internal"
   val annoHost = "em-anno-#{env}.service.core-compute-#{env}.internal"
+  val npaAPIURL = "http://em-npa-#{env}.service.core-compute-#{env}.internal"
+  val npaHost = "em-npa-#{env}.service.core-compute-#{env}.internal"
 
   val HttpProtocol = http
 

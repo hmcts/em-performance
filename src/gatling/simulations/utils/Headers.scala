@@ -97,6 +97,34 @@ object Headers {
     //"user-id" -> "#{userId}",
   )
 
+  /*NPA HEADERS*/
+  val npaGetMarkupsHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Accept" -> "*/*",
+    "Host" -> npaHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    "user-id" -> "#{userId}"
+  )
+
+  val npaPostMarkupsHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Content-Type" -> "application/json",
+    "Accept" -> "*/*",
+    "Host" -> npaHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    "user-id" -> "#{userId}"
+  )
+
+
+
+
+
+
+
 
 
 

@@ -25,7 +25,7 @@ object BookmarkService {
           .headers(annoCreateBookmarkHeader)
           .body(ElFileBody("bodies/ANNO_CreateBookmark.json")).asJson
           .check(status is 201)
-          .check(regex("#{documentId}")))
+          .check(jsonPath("$.id").saveAs("bookmarkId")))
     }
 
 
