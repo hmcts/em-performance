@@ -5,8 +5,9 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.Annotations.{BookmarkService, MetadataService}
-import requests.{Authentication, DMStore, DocAssembly}
+import requests.Annotations._
+import requests.NPA._
+import requests._
 import utils.Environment._
 
 import scala.concurrent.duration._
@@ -67,6 +68,13 @@ class EMTest extends Simulation {
   val getBookmarksRatePerSec = getBookmarksHourlyTarget /3600
   val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
 
+  /*Hourly Volumes for NPA requests*/
+  val getMarkupHourlyTarget: Double = 10000
+  val createMarkupHourlyTarget: Double = 300
+  /*Rate Per Second Volume for DM Store Requests */
+  val getMarkupRatePerSec = getMarkupHourlyTarget / 3600
+  val createMarkupRatePerSec = createMarkupHourlyTarget / 3600
+
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
 
@@ -80,6 +88,8 @@ class EMTest extends Simulation {
   val DocAssemblyConvertFeeder = csv("feeders/POSTDocAssemblyConvert.csv").random
   /* Annotations */
   val AnnoCreateBookmarkFeeder = csv("feeders/ANNO_DocumentData.csv").circular
+  /* NPA */
+  val NPAgetMarkupFeeder = csv("feeders/ANNO_DocumentData.csv").circular
 
 
   //If running in debug mode, disable pauses between steps
@@ -225,6 +235,29 @@ class EMTest extends Simulation {
         .exec(MetadataService.MetadataGetMetadata)
     }
 
+  /* NPA SCENARIOS*/
+
+  //scenario for NPA Get Markups Download
+  val ScnNPAGetMarkup = scenario("NPA_GET_Markup")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .feed(NPAgetMarkupFeeder)
+        .exec(MarkupService.MarkupGetMarkups)
+    }
+
+  //scenario for NPA Post and Delete Markups (Redaction)
+  val ScnNPACreateDeleteMarkup = scenario("NPA_POST_DELETE_Markup")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .feed(NPAgetMarkupFeeder)
+        .exec(MarkupService.MarkupCreateMarkups)
+        .exec(MarkupService.MarkupDeleteMarkup)
+    }
+
 
 
   /*EM STORE SIMULATIONS */
@@ -242,6 +275,9 @@ class EMTest extends Simulation {
     ScnAnnoCreateBookmark.inject(simulationProfile(testType, AnnoCreateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //NPA Simulations
+    ScnNPAGetMarkup.inject(simulationProfile(testType, getMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

@@ -1,0 +1,14 @@
+{
+  "redactionId": "#{markupId}",
+  "documentId": "#{documentId}",
+  "page": 1,
+  "rectangles": [
+    {
+      "id": "#{markupId}",
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  ]
+}

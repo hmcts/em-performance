@@ -4,6 +4,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
 import java.time._
+import java.util.UUID
+import java.util.UUID.randomUUID
 
 
 
@@ -65,6 +67,11 @@ object Common {
     val randNumber = rand.between(minNumber, maxNumber).asInstanceOf[Int]
     println("the number is " + randNumber)
     randNumber
+  }
+
+  def getUUID(): String = {
+    val UUID = randomUUID().toString
+    UUID
   }
 
 
