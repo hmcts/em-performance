@@ -1,0 +1,51 @@
+{
+  "case_details": {
+    "case_data": {
+      "caseBundles": [
+        {
+          "value": {
+            "id": "#{bundleId}",
+            "title": "Bundle title",
+            "description": "Test bundle",
+            "eligibleForStitching": "yes",
+            "eligibleForCloning": "no",
+            "documents": [
+              {
+                "value": {
+                  "name": "doc1",
+                  "description": "description",
+                  "sourceDocument": {
+                    "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/68cfde6e-3038-4b95-a2cb-145302a2a170",
+                    "document_filename": "2MB.pdf",
+                    "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/68cfde6e-3038-4b95-a2cb-145302a2a170/binary"
+                  }
+                }
+              },
+              {
+                "value": {
+                  "name": "doc2",
+                  "description": "description",
+                  "sourceDocument": {
+                    "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/3774f836-b7cb-4992-b0f3-47cae1841cf1",
+                    "document_filename": "5MB.pdf",
+                    "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/3774f836-b7cb-4992-b0f3-47cae1841cf1/binary"
+                  }
+                }
+              }
+            ],
+            "folders": [],
+            "fileName": "fileName",
+            "coverpageTemplate": null,
+            "hasTableOfContents": "Yes",
+            "hasCoversheets": "Yes",
+            "hasFolderCoversheets": null,
+            "stitchStatus": "",
+            "paginationStyle": "off",
+            "pageNumberFormat": "numberOfPages",
+            "stitchingFailureMessage": null
+          }
+        }
+      ]
+    }
+  }
+}

@@ -119,6 +119,31 @@ object Headers {
     "user-id" -> "#{userId}"
   )
 
+    /*EM STITCHING HEADERS*/
+    val emStitchingPostTaskHeader = Map(
+      "ServiceAuthorization" -> "#{authToken}",
+      "Authorization" -> "Bearer #{bearerToken}",
+      "Content-Type" -> "application/json",
+      "Accept" -> "*/*",
+      "Host" -> emStitchingHost,
+      "Accept-Encoding" -> "gzip, deflate, br",
+      "Connection" -> "keep-alive",
+      "user-id" -> "#{userId}"
+    )
+
+  /*CCD ORCHESTRATOR HEADERS*/
+  val ccdBundlePostTaskHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Content-Type" -> "application/json",
+    "Accept" -> "*/*",
+    "Host" -> ccdOrchestratorHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    "user-id" -> "#{userId}"
+  )
+
+
 
 
 

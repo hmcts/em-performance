@@ -17,6 +17,10 @@ object Environment {
   val annoHost = "em-anno-#{env}.service.core-compute-#{env}.internal"
   val npaAPIURL = "http://em-npa-#{env}.service.core-compute-#{env}.internal"
   val npaHost = "em-npa-#{env}.service.core-compute-#{env}.internal"
+  val emStitchingURL = "http://em-stitching-#{env}.service.core-compute-#{env}.internal"
+  val emStitchingHost = "em-stitching-#{env}.service.core-compute-#{env}.internal"
+  val ccdOrchestratorAPIURL = "http://em-ccd-orchestrator-#{env}.service.core-compute-#{env}.internal"
+  val ccdOrchestratorHost = "em-ccd-orchestrator-#{env}.service.core-compute-#{env}.internal"
 
   val HttpProtocol = http
 
