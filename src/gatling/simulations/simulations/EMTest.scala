@@ -7,6 +7,7 @@ import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
 import requests.Annotations._
 import requests.NPA._
+import requests.CCDOrchestrator._
 import requests._
 import utils.Environment._
 
@@ -74,6 +75,11 @@ class EMTest extends Simulation {
   /*Rate Per Second Volume for DM Store Requests */
   val getMarkupRatePerSec = getMarkupHourlyTarget / 3600
   val createMarkupRatePerSec = createMarkupHourlyTarget / 3600
+
+  /*Hourly Volumes for Stitching requests*/
+  val CreateBundleHourlyTarget: Double = 400
+  /*Rate Per Second Volume for DM Store Requests */
+  val CreateBundleRatePerSec = CreateBundleHourlyTarget / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -258,6 +264,15 @@ class EMTest extends Simulation {
         .exec(MarkupService.MarkupDeleteMarkup)
     }
 
+  /* CCD STITCHING SCENARIOS*/
+  val ScnStitchBundles = scenario("CCD_STITCH_BUNDLES")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(CCDBundleStitchingService.CCDBundleCreateBundleSync)
+        .exec(CCDBundleStitchingService.CCDBundleCreateBundleAsync)
+    }
 
 
   /*EM STORE SIMULATIONS */
@@ -277,7 +292,9 @@ class EMTest extends Simulation {
     ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //NPA Simulations
     ScnNPAGetMarkup.inject(simulationProfile(testType, getMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //STITCHING Simulations
+    ScnStitchBundles.inject(simulationProfile(testType, CreateBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
