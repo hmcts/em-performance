@@ -53,6 +53,14 @@ object Common {
     currentDateTimeFormatted
   }
 
+  //returns an integer value between a min and max value
+  def getRandomNumberIntBetweenValues(minNumber: Int, maxNumber: Int): Int = {
+    val rand = new scala.util.Random
+    val randNumber = rand.between(minNumber, maxNumber)
+    println("the number is " + randNumber)
+    randNumber
+  }
+
   //returns an double value between a min and max value
   def getRandomNumberDoubleBetweenValues(minNumber:Int, maxNumber:Int): Double = {
     val rand = new scala.util.Random
@@ -61,13 +69,6 @@ object Common {
     randNumber
   }
 
-  //returns an double value between a min and max value
-  def getRandomNumberIntBetweenValues(minNumber: Int, maxNumber: Int): Int = {
-    val rand = new scala.util.Random
-    val randNumber = rand.between(minNumber, maxNumber).asInstanceOf[Int]
-    println("the number is " + randNumber)
-    randNumber
-  }
 
   def getUUID(): String = {
     val UUID = randomUUID().toString
