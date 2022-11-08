@@ -5,8 +5,9 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.NPA.MarkupService
-import requests.{Authentication, DMStore, DocAssembly}
+import requests.NPA._
+import requests.Authentication
+
 
 import utils.Environment._
 

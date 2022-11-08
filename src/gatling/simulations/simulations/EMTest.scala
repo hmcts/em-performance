@@ -8,7 +8,9 @@ import io.gatling.core.scenario.Simulation
 import requests.Annotations._
 import requests.NPA._
 import requests.CCDOrchestrator._
-import requests._
+import requests.DocAssembly._
+import requests.DMStore._
+import requests.Authentication
 import utils.Environment._
 
 import scala.concurrent.duration._
@@ -169,7 +171,7 @@ class EMTest extends Simulation {
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker", "CCD"))
-        .exec(DMStore.DMStoreDocumentUploadSelector("TEST"))
+        .exec(StoreDocumentService.DMStoreDocumentUploadSelector("TEST"))
 
     }
 
@@ -179,7 +181,7 @@ class EMTest extends Simulation {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker", "CCD"))
         .feed(DMDocumentDownloadFeeder)
-        .exec(DMStore.DMStoreDocDownload)
+        .exec(StoreDocumentService.DMStoreDocDownload)
     }
 
   //scenario for DM Store Document Download Binary
@@ -188,7 +190,7 @@ class EMTest extends Simulation {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker","CCD"))
         .feed(DMDocumentDownloadBinaryFeeder)
-        .exec(DMStore.DMStoreDocDownloadBinary)
+        .exec(StoreDocumentService.DMStoreDocDownloadBinary)
     }
 
   //scenario for DM Store Delete Document
@@ -197,7 +199,7 @@ class EMTest extends Simulation {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker","CCD"))
         .feed(DMDocumentDeleteFeeder)
-        .exec(DMStore.DMStoreDocDelete)
+        .exec(StoreDocumentDeleteService.DMStoreDocDelete)
     }
 
   //scenario for DM Store Bulk Update Document
@@ -206,7 +208,7 @@ class EMTest extends Simulation {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker", "CCD"))
         .feed(DMDocumentUpdateFeeder)
-        .exec(DMStore.DMStoreUpdateDoc)
+        .exec(StoreDocumentUpdateService.DMStoreUpdateDoc)
     }
 
   //scenario for DocAssembly Convert Document
@@ -216,7 +218,7 @@ class EMTest extends Simulation {
         .feed(DocAssemblyConvertFeeder)
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
-        .exec(DocAssembly.DocAssemblyConvert)
+        .exec(DocumentConversion.DocAssemblyConvert)
     }
 
   //scenario for Annotations Create Bookmark
