@@ -152,7 +152,6 @@ class AnnotationsAPI extends Simulation {
     }
 
 
-
   val ScnAnnoGetMetadata = scenario("Annotations Get Metadata")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
