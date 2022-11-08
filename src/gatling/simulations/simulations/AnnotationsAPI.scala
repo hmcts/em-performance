@@ -44,6 +44,7 @@ class AnnotationsAPI extends Simulation {
   /*Hourly Volumes for Annotation requests*/
   val createBookmarkHourlyTarget:Double = 250
   val getBookmarksHourlyTarget:Double = 10000
+  val updateBookmarksHourlyTarget:Double = 300
   val getMetadataHourlyTarget:Double = 10000
   val createDeleteAnnotationsHourlyTarget:Double = 400
   val getSetFilterAnnotations:Double = 400
@@ -51,6 +52,7 @@ class AnnotationsAPI extends Simulation {
   /*Rate Per Second Volume for Annotation Requests */
   val createBookmarkRatePerSec = createBookmarkHourlyTarget / 3600
   val getBookmarksRatePerSec = getBookmarksHourlyTarget / 3600
+  val updateBookmarkRatePerSec = updateBookmarksHourlyTarget / 3600
   val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
   val createDeleteAnnotationsRatePerSec = createDeleteAnnotationsHourlyTarget / 3600
   val getSetFilterAnnotationsRatePerSec = getSetFilterAnnotations / 3600
@@ -140,6 +142,17 @@ class AnnotationsAPI extends Simulation {
         .exec(BookmarkService.BookmarkGetBookmarks)
     }
 
+  val ScnAnnoUpdateBookmarks = scenario("Annotations Update Bookmarks")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(BookmarkService.BookmarkUpdateExistingBookmarks)
+    }
+
+
+
   val ScnAnnoGetMetadata = scenario("Annotations Get Metadata")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
@@ -175,6 +188,7 @@ class AnnotationsAPI extends Simulation {
   setUp(
     ScnAnnoCreateBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoUpdateBookmarks.inject(simulationProfile(testType, updateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, createDeleteAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getSetFilterAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)

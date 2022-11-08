@@ -56,6 +56,22 @@ object BookmarkService {
     }
 
 
+  /* PUT request for updating existing bookmark objects.  The request requires both an S2S token and Idam token and this should be
+      called prior to the request being made.  A feeder file was created with documents with prefix name "ANNO_EM_DMStore" and these
+      documents can be used to update bookmarks.   */
+
+  val BookmarkUpdateExistingBookmarks =
+
+    group("Annotations_Bookmark") {
+      exec(_.set("xBookmarkPosition", getRandomNumberDoubleBetweenValues(1, 100)).set("yBookmarkPosition", getRandomNumberDoubleBetweenValues(1, 100))
+        .set("pageNumber", getRandomNumberIntBetweenValues(1, 5)).set("bookmarkId",getUUID()))
+      .exec(http("PUT_Bookmarks")
+        .put(annoAPIURL + "/api/bookmarks")
+        .body(ElFileBody("bodies/ANNO_UpdateExistingBookmark.json")).asJson
+        .headers(annoCreateBookmarkHeader))
+    }
+
+
 
 
 }

@@ -1,0 +1,11 @@
+{
+  "id": "#{bookmarkId}",
+  "name": "string",
+  "documentId": "#{documentId}",
+  "createdBy": "string",
+  "pageNumber": 1,
+  "getxCoordinate": "#{xBookmarkPosition}",
+  "getyCoordinate": "#{yBookmarkPosition}",
+  "parent": "#{bookmarkId}",
+  "previous": "#{bookmarkId}"
+}
