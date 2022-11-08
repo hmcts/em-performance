@@ -23,10 +23,9 @@ object AnnotationsService {
         })
         .exec(http("POST_Annotation")
           .post(annoAPIURL + "/api/annotations")
-          .headers(annoCreateBookmarkHeader)
+          .headers(annoCreateAnnotationHeader)
           .body(ElFileBody("bodies/ANNO_Annotations.json")).asJson
           .check(status is 201))
-           //.check(jsonPath("$.id").saveAs("bookmarkId")))
       }
 
 
@@ -41,7 +40,7 @@ object AnnotationsService {
       group("Annotations_Annotations") {
         exec(http("DELETE_Annotation")
           .delete(annoAPIURL + "/api/annotations/#{annotationId}")
-          .headers(annoCreateBookmarkHeader)
+          .headers(annoDeleteAnnotationHeader)
           .check(status is 200))
       }
 

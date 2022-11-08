@@ -64,10 +64,14 @@ class EMTest extends Simulation {
   val AnnoCreateBookmarkHourlyTarget: Double = 600
   val getBookmarksHourlyTarget:Double = 10000
   val getMetadataHourlyTarget:Double = 10000
+  val createDeleteAnnotationsHourlyTarget: Double = 400
+  val getSetFilterAnnotations: Double = 400
   /*Rate Per Second Volume for DM Store Requests */
   val AnnoCreateBookmarkRatePerSec = AnnoCreateBookmarkHourlyTarget / 3600
   val getBookmarksRatePerSec = getBookmarksHourlyTarget /3600
   val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
+  val createDeleteAnnotationsRatePerSec = createDeleteAnnotationsHourlyTarget / 3600
+  val getSetFilterAnnotationsRatePerSec = getSetFilterAnnotations / 3600
 
   /*Hourly Volumes for NPA requests*/
   val getMarkupHourlyTarget: Double = 10000
@@ -241,6 +245,25 @@ class EMTest extends Simulation {
         .exec(MetadataService.MetadataGetMetadata)
     }
 
+  val ScnAnnoCreateDeleteAnnotations = scenario("Annotations Create Annotations")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(AnnotationsService.AnnotationsCreateAnnotation)
+        .exec(AnnotationsService.AnnotationsDeleteAnnotation)
+    }
+
+  val ScnAnnoSetFilterGetFilter = scenario("Annotations Set Filter")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(AnnotationsSetFilterService.AnnotationsSetFilterGetFilterAnnotation)
+    }
+
   /* NPA SCENARIOS*/
 
   //scenario for NPA Get Markups Download
@@ -290,6 +313,8 @@ class EMTest extends Simulation {
     ScnAnnoCreateBookmark.inject(simulationProfile(testType, AnnoCreateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, createDeleteAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getSetFilterAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //NPA Simulations
     ScnNPAGetMarkup.inject(simulationProfile(testType, getMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),

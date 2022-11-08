@@ -87,6 +87,24 @@ object Headers {
     "user-id" -> "#{userId}",
   )
 
+  val annoDeleteAnnotationHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Accept" -> "*/*",
+    "Host" -> annoHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+  )
+
+  val annoSetFilterAnnotationHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Accept" -> "*/*",
+    "Host" -> annoHost,
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+  )
+
   val annoGetMetadataHeader = Map(
     "ServiceAuthorization" -> "#{authToken}",
     "Authorization" -> "Bearer #{bearerToken}",
@@ -96,6 +114,19 @@ object Headers {
     "Connection" -> "keep-alive",
     //"user-id" -> "#{userId}",
   )
+
+  val annoCreateAnnotationHeader = Map(
+    "ServiceAuthorization" -> "#{authToken}",
+    "Authorization" -> "Bearer #{bearerToken}",
+    "Accept" -> "*/*",
+    "Host" -> annoHost,
+    "Content-Type" -> "application/json",
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Connection" -> "keep-alive",
+    "user-id" -> "#{userId}",
+  )
+
+
 
   /*NPA HEADERS*/
   val npaGetMarkupsHeader = Map(
