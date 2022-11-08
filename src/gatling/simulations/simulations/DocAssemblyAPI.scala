@@ -5,7 +5,8 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.{Authentication, DMStore, DocAssembly}
+import requests.Authentication
+import requests.DocAssembly._
 import utils.Environment._
 
 import scala.concurrent.duration._
@@ -119,7 +120,7 @@ class DocAssemblyAPI extends Simulation {
       .feed(DocAssemblyConvertFeeder)
       .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
       .exec(Authentication.IdamAuth("Caseworker"))
-      .exec(DocAssembly.DocAssemblyConvert)
+      .exec(DocumentConversion.DocAssemblyConvert)
     }
 
   val ScnDocAssemblyRenderTemplate = scenario("DocAssembly Render Template")
@@ -127,7 +128,7 @@ class DocAssemblyAPI extends Simulation {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
-        .exec(DocAssembly.DocAssemblyRenderTemplate)
+        .exec(TemplateRendition.DocAssemblyRenderTemplate)
     }
 
 

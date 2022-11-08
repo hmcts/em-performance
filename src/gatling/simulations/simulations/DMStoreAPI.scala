@@ -5,8 +5,10 @@ import io.gatling.core.Predef._
 import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
-import requests.{Authentication, DMStore}
+import requests.Authentication
+import requests.DMStore._
 import utils.Environment._
+
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -126,7 +128,7 @@ class DMStoreAPI extends Simulation {
     .exitBlockOnFail {
       exec(  _.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker", "CCD"))
-      .exec(DMStore.DMStoreDocumentUploadSelector("GET_DATA_PREP"))
+      .exec(StoreDocumentService.DMStoreDocumentUploadSelector("GET_DATA_PREP"))
 
     }
 
@@ -136,7 +138,7 @@ class DMStoreAPI extends Simulation {
       exec(_.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker", "CCD"))
       .feed(DMDocumentDownloadFeeder)
-      .exec(DMStore.DMStoreDocDownload)
+      .exec(StoreDocumentService.DMStoreDocDownload)
     }
 
   //scenario for DM Store Document Download Binary
@@ -145,7 +147,7 @@ class DMStoreAPI extends Simulation {
       exec(_.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker","CCD"))
       .feed(DMDocumentDownloadBinaryFeeder)
-      .exec(DMStore.DMStoreDocDownloadBinary)
+      .exec(StoreDocumentService.DMStoreDocDownloadBinary)
     }
 
   //scenario for DM Store Delete Document
@@ -154,7 +156,7 @@ class DMStoreAPI extends Simulation {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker","CCD"))
         .feed(DMDocumentDeleteFeeder)
-        .exec(DMStore.DMStoreDocDelete)
+        .exec(StoreDocumentDeleteService.DMStoreDocDelete)
     }
 
   //scenario for DM Store Bulk Update Document
@@ -163,7 +165,7 @@ class DMStoreAPI extends Simulation {
       exec(_.set("env", s"${env}"))
         .exec(Authentication.S2SAuth("Caseworker", "CCD"))
         .feed(DMDocumentUpdateFeeder)
-        .exec(DMStore.DMStoreUpdateDoc)
+        .exec(StoreDocumentUpdateService.DMStoreUpdateDoc)
     }
 
 

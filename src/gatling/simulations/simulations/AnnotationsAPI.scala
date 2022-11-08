@@ -6,7 +6,7 @@ import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
 import requests.Annotations._
-import requests.{Authentication, DMStore}
+import requests.Authentication
 import utils.Environment._
 
 import scala.concurrent.duration._

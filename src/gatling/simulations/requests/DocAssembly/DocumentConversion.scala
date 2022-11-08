@@ -1,12 +1,11 @@
-package requests
+package requests.DocAssembly
 
-  import io.gatling.core.Predef._
-  import io.gatling.http.Predef.{RawFileBodyPart, _}
-  import utils.Environment._
-  import utils.Headers._
+import io.gatling.core.Predef._
+import io.gatling.http.Predef.http
+import utils.Environment._
+import utils.Headers._
 
-
-object DocAssembly {
+object DocumentConversion {
 
   /*  POST /api/convert/{documentId} request to doc Assembly.  This call triggers the conversion of a document to PDF for viewing.
       The request requires an S2SToken and Bearer (Idam) so Authentication.S2SAuth and Authentication.IdamAuth should be called prior to running this request.
@@ -25,14 +24,4 @@ object DocAssembly {
     }
 
 
-  val DocAssemblyRenderTemplate =
-
-    group("DocAssembly_RenderTemplate") {
-      exec(http("POST_DocAssemblyRenderTemplate")
-        .post(docAssemblyURL + "/api/template-renditions")
-        .headers(docAssemblyConvertHeader))
-    }
-
 }
-
-
