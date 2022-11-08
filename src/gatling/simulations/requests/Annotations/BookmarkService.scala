@@ -51,7 +51,7 @@ object BookmarkService {
 
     group("Annotations_Bookmark") {
       exec(http("DELETE_Bookmarks")
-        .get(annoAPIURL + "/api/bookmarks_multiple")
+        .delete(annoAPIURL + "/api/bookmarks_multiple")
         .headers(annoCreateBookmarkHeader))
     }
 

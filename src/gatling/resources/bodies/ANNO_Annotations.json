@@ -1,0 +1,75 @@
+{
+  "createdBy": "5adac593-8c36-48fb-92af-7f3d8bc6c1fd",
+  "createdByDetails": {
+    "forename": "PerfTestCaseWorker",
+    "surname": "CW",
+    "email": "ccdloadtest-cw@gmail.com"
+  },
+  "lastModifiedByDetails": {
+    "forename": "PerfTestCaseWorker",
+    "surname": "CW",
+    "email": "ccdloadtest-cw@gmail.com"
+  },
+  "createdDate": "#{currentDateTime}",
+  "lastModifiedBy": "5adac593-8c36-48fb-92af-7f3d8bc6c1fd",
+  "lastModifiedDate": "#{currentDateTime}",
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "page": 0,
+  "color": "black",
+  "annotationSetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "comments": [
+    {
+      "createdBy": "5adac593-8c36-48fb-92af-7f3d8bc6c1fd",
+      "createdByDetails": {
+        "forename": "PerfTestCaseWorker",
+        "surname": "CW",
+        "email": "ccdloadtest-cw@gmail.com"
+      },
+      "lastModifiedByDetails": {
+        "forename": "PerfTestCaseWorker",
+        "surname": "CW",
+        "email": "ccdloadtest-cw@gmail.com"
+      },
+      "createdDate": "#{currentDateTime}",
+      "lastModifiedBy": "5adac593-8c36-48fb-92af-7f3d8bc6c1fd",
+      "lastModifiedDate": "#{currentDateTime}",
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "content": "string",
+      "annotationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
+  ],
+  "tags": [
+    {
+      "name": "string",
+      "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "label": "string",
+      "color": "string"
+    }
+  ],
+  "rectangles": [
+    {
+      "createdBy": "5adac593-8c36-48fb-92af-7f3d8bc6c1fd",
+      "createdByDetails": {
+        "forename": "PerfTestCaseWorker",
+        "surname": "CW",
+        "email": "ccdloadtest-cw@gmail.com"
+      },
+      "lastModifiedByDetails": {
+        "forename": "PerfTestCaseWorker",
+        "surname": "CW",
+        "email": "ccdloadtest-cw@gmail.com"
+      },
+      "createdDate": "#{currentDateTime}",
+      "lastModifiedBy": "5adac593-8c36-48fb-92af-7f3d8bc6c1fd",
+      "lastModifiedDate": "#{currentDateTime}",
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0,
+      "annotationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
+  ],
+  "documentId": "a0f31d90-7eaa-4bee-bed2-e3b5f75d1a82",
+  "type": "string"
+}

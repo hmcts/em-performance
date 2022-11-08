@@ -13,6 +13,8 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 
+
+
 class AnnotationsAPI extends Simulation {
 
   val dmBaseURL = dmStoreURL
@@ -143,14 +145,39 @@ class AnnotationsAPI extends Simulation {
     }
 
 
+  val ScnAnnoCreateDeleteAnnotations = scenario("Annotations Create Annotations")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(AnnotationsService.AnnotationsCreateAnnotation)
+        .exec(AnnotationsService.AnnotationsDeleteAnnotation)
+    }
+
+  val ScnAnnoSetFilterGetFilter = scenario("Annotations Set Filter")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .feed(AnnoCreateBookmarkFeeder)
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(AnnotationsSetFilterService.AnnotationsSetFilterGetFilterAnnotation)
+    }
 
 
-  /*DM STORE SIMULATIONS */
+
+
+
+
+
+  /*ANNOTATIONS SIMULATIONS */
 
   setUp(
-    ScnAnnoCreateBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    //ScnAnnoCreateBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
