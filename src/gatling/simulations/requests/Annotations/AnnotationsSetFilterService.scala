@@ -18,7 +18,7 @@ object AnnotationsSetFilterService {
       exec(http("GET_Filter")
         .get(annoAPIURL + "/api/annotation-sets/filter")
         .queryParam("documentId","#{documentId}")
-        .headers(annoCreateBookmarkHeader)
+        .headers(annoSetFilterAnnotationHeader)
         .check(status in (200,404)))
     }
 

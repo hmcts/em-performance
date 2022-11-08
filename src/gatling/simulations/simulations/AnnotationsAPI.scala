@@ -45,10 +45,15 @@ class AnnotationsAPI extends Simulation {
   val createBookmarkHourlyTarget:Double = 250
   val getBookmarksHourlyTarget:Double = 10000
   val getMetadataHourlyTarget:Double = 10000
+  val createDeleteAnnotationsHourlyTarget:Double = 400
+  val getSetFilterAnnotations:Double = 400
+
   /*Rate Per Second Volume for Annotation Requests */
   val createBookmarkRatePerSec = createBookmarkHourlyTarget / 3600
   val getBookmarksRatePerSec = getBookmarksHourlyTarget / 3600
   val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
+  val createDeleteAnnotationsRatePerSec = createDeleteAnnotationsHourlyTarget / 3600
+  val getSetFilterAnnotationsRatePerSec = getSetFilterAnnotations / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -165,19 +170,14 @@ class AnnotationsAPI extends Simulation {
     }
 
 
-
-
-
-
-
   /*ANNOTATIONS SIMULATIONS */
 
   setUp(
-    //ScnAnnoCreateBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnAnnoCreateBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, createDeleteAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getSetFilterAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
