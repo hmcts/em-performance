@@ -19,7 +19,7 @@ object CCDBundleStitchingService {
   val CCDBundleCreateBundleSync =
 
     group("CCDBundle_CreateBundle") {
-        DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(1,5))
+        DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,5))
         .exec(http("POST_CCD_Sync_Bundle")
             .post(ccdOrchestratorAPIURL + "/api/stitch-ccd-bundles")
             .headers(ccdBundlePostTaskHeader)
@@ -31,7 +31,7 @@ object CCDBundleStitchingService {
   val CCDBundleCreateBundleAsync =
 
     group("CCDBundle_CreateBundle") {
-      DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(1,5))
+      DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,5))
         .exec(http("POST_CCD_ASync_Bundle")
           .post(ccdOrchestratorAPIURL + "/api/new-bundle")
           .headers(ccdBundlePostTaskHeader)
