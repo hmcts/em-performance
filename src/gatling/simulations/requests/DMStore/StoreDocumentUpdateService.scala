@@ -20,7 +20,7 @@ object StoreDocumentUpdateService {
 
     group("DMStore_BulkUpdate") {
       exec(session => {
-        session.setAll("ttlDate" -> currentDateTime("yyyy-MM-dd"), "ttlTime" -> currentDateTime("HH:mm:ss"))
+        session.setAll("ttlDate" -> currentDateTimePlus1Year("yyyy-MM-dd"), "ttlTime" -> currentDateTime("HH:mm:ss"))
       })
         .exec(http("PATCH_BulkUpdate")
           .patch(dmStoreURL + "/documents")

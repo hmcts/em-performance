@@ -4,11 +4,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
 import java.time._
-import java.util.UUID
+import java.util.Calendar
+import java.text.SimpleDateFormat
 import java.util.UUID.randomUUID
-
-
-
 
 
 object Common {
@@ -53,6 +51,19 @@ object Common {
     currentDateTimeFormatted
   }
 
+  // returns the date 1 year from now
+  def currentDateTimePlus1Year(pattern: String): String = {
+    val dateFormatLocal = new SimpleDateFormat(pattern)
+    val currentDateTimeFormatted = LocalDateTime.now.format(DateTimeFormatter.ofPattern(pattern))
+    val origDate = dateFormatLocal.parse(currentDateTimeFormatted)
+    val c = Calendar.getInstance()
+    c.setTime(origDate)
+    c.add(Calendar.YEAR, 1)
+    val newDate = c.getTime()
+    val newDateFormat = dateFormatLocal.format(newDate)
+    newDateFormat
+  }
+
   //returns an integer value between a min and max value
   def getRandomNumberIntBetweenValues(minNumber: Int, maxNumber: Int): Int = {
     val rand = new scala.util.Random
@@ -68,7 +79,6 @@ object Common {
     println("the number is " + randNumber)
     randNumber
   }
-
 
   def getUUID(): String = {
     val UUID = randomUUID().toString
