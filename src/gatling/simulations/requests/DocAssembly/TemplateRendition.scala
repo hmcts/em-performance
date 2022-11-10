@@ -1,7 +1,7 @@
 package requests.DocAssembly
 
 import io.gatling.core.Predef._
-import io.gatling.http.Predef.http
+import io.gatling.http.Predef._
 import utils.Environment._
 import utils.Headers._
 
