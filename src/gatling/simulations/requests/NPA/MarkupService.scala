@@ -17,7 +17,7 @@ object MarkupService {
 
   val MarkupGetMarkups =
 
-    group("Annotations_Markup") {
+    group("NPA_Markup") {
       exec(http("GET_Markups")
         .get(npaAPIURL + "/api/markups/#{documentId}")
         .headers(npaGetMarkupsHeader)
@@ -32,7 +32,7 @@ object MarkupService {
 
   val MarkupCreateMarkups =
 
-    group("Annotations_Markup") {
+    group("NPA_Markup") {
       exec(_.set("markupId", getUUID()))
       .exec(http("POST_Markups")
         .post(npaAPIURL + "/api/markups")
@@ -50,7 +50,7 @@ object MarkupService {
 
   val MarkupDeleteMarkup =
 
-    group("Annotations_Markup") {
+    group("NPA_Markup") {
       doIf("#{redactionId.exists()}") {
         randomSwitch(50d -> exec(http("DELETE_Markup")
                                           .delete(npaAPIURL + "/api/markups/#{documentId}/#{redactionId}")
@@ -70,7 +70,7 @@ object MarkupService {
 
   val MarkupBurnMarkups =
 
-    group("Annotations_Markup") {
+    group("NPA_Markup") {
       exec(_.set("rectangleId", getUUID()))
       .exec(_.set("redactionId", getUUID()))
         .exec(http("POST_Markups")
