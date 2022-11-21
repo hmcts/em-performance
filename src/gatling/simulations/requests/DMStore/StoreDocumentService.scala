@@ -25,12 +25,14 @@ object StoreDocumentService {
       case "GET_DATA_PREP" => session.set("filePrefix", "GET").set("fileType", "pdf")
       case "DOC_ASSEMBLY_DATA_PREP" => session.set("filePrefix", "DOC_ASSEMBLY").set("fileType", "docx")
       case "ANNOTATION_DATA_PREP" => session.set("filePrefix", "ANNO").set("fileType", "pdf")
+      case "CRON_DELETE_JOB" => session.set("filePrefix", "CRON_DELETE").set("fileType", "pdf")
       case _ => session.set("filePrefix", "TEST").set("fileType", "pdf")
     })
       .doIf(session => session("filePrefix").as[String].equals("GET")
         || session("filePrefix").as[String].equals("DELETE")
         || session("filePrefix").as[String].equals("TEST")
-        || session("filePrefix").as[String].equals("ANNO")) {
+        || session("filePrefix").as[String].equals("ANNO")
+        || session("filePrefix").as[String].equals("CRON_DELETE")) {
         randomSwitch(80d -> exec(_.set("fileSize", "2")),
           10d -> exec(_.set("fileSize", "5")),
           5d -> exec(_.set("fileSize", "10")),
