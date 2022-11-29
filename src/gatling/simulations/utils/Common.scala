@@ -68,7 +68,7 @@ object Common {
   def getRandomNumberIntBetweenValues(minNumber: Int, maxNumber: Int): Int = {
     val rand = new scala.util.Random
     val randNumber = rand.between(minNumber, maxNumber)
-    println("the number is " + randNumber)
+    //println("the number is " + randNumber)
     randNumber
   }
 
@@ -76,7 +76,7 @@ object Common {
   def getRandomNumberDoubleBetweenValues(minNumber:Int, maxNumber:Int): Double = {
     val rand = new scala.util.Random
     val randNumber = rand.between(minNumber,maxNumber).asInstanceOf[Double]
-    println("the number is " + randNumber)
+    //println("the number is " + randNumber)
     randNumber
   }
 
