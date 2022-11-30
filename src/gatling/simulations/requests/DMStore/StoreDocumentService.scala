@@ -52,18 +52,18 @@ object StoreDocumentService {
         //PDF documents
         exec(_.set("fileSizeName", "_230_5").set("fileSize", "5").set("fileType", "pdf"))
         .exec(DMStoreDocumentUpload)
-        .exec(_.set("fileSizeName", "464_10").set("fileSize", "10"))
+        .exec(_.set("fileSizeName", "_464_10").set("fileSize", "10"))
         .exec(DMStoreDocumentUpload)
-        .exec(_.set("fileSizeName", "1158_25").set("fileSize", "25"))
+        .exec(_.set("fileSizeName", "_1158_25").set("fileSize", "25"))
         .exec(DMStoreDocumentUpload)
-        .exec(_.set("fileSizeName", "2320_50").set("fileSize", "50"))
+        .exec(_.set("fileSizeName", "_2320_50").set("fileSize", "50"))
         .exec(DMStoreDocumentUpload)
         //Word Documents
         .exec(_.set("fileSizeName", "_5_1").set("fileSize", "1").set("fileType", "docx"))
         .exec(DMStoreDocumentUpload)
-        .exec(_.set("fileSizeName", "78_5").set("fileSize", "5"))
+        .exec(_.set("fileSizeName", "_78_5").set("fileSize", "5"))
         .exec(DMStoreDocumentUpload)
-        .exec(_.set("fileSizeName", "175_15").set("fileSize", "15"))
+        .exec(_.set("fileSizeName", "_175_15").set("fileSize", "15"))
         .exec(DMStoreDocumentUpload)
       }
 
