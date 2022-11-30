@@ -45,12 +45,14 @@ class DMStoreAPI extends Simulation {
   val docDownloadBinaryHourlyTarget:Double = 40000
   val docUpdateHourlyTarget:Double = 7500
   val docDeleteHourlyTarget:Double = 150
+  val docUploadStitchingHourlyTarget:Double = 1
   /*Rate Per Second Volume for DM Store Requests */
   val docUploadRatePerSec = docUploadHourlyTarget / 3600
   val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
   val docUpdateRatePerSec = docUpdateHourlyTarget / 3600
   val docDeleteRatePerSec = docDeleteHourlyTarget /3600
+  val docUploadStitchingRatePerSec = docUploadStitchingHourlyTarget /3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -129,7 +131,6 @@ class DMStoreAPI extends Simulation {
       exec(  _.set("env", s"${env}"))
       .exec(Authentication.S2SAuth("Caseworker", "CCD"))
       .exec(StoreDocumentService.DMStoreDocumentUploadSelector("GET_DATA_PREP"))
-
     }
 
   //scenario for DM Store Document Download
@@ -168,16 +169,25 @@ class DMStoreAPI extends Simulation {
         .exec(StoreDocumentUpdateService.DMStoreUpdateDoc)
     }
 
+  val ScnDMStoreDocUploadStitching = scenario("DMStore Document Upload")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "CCD"))
+        .exec(StoreDocumentService.DMStoreDocumentUploadSelector("STITCHING_DATA_PREP"))
+    }
+
 
 
   /*DM STORE SIMULATIONS */
 
   setUp(
-    ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    //ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    //Data Prep for Stitching - not needed for blended test
+    ScnDMStoreDocUploadStitching.inject(simulationProfile(testType, docUploadStitchingRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
