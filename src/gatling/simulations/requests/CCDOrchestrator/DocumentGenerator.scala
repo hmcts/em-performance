@@ -5,6 +5,7 @@ import io.circe.generic.auto._
 import io.circe.syntax._
 import io.gatling.core.Predef._
 import utils.Common._
+import io.gatling.http.Predef._
 
 /* Document Generator for creating multiple documents for a stitching request.  The purpose of the generator is to
    build a JSON payload by appending the top of the JSON to a list of documents that are randomly picked from a feeder file
@@ -17,7 +18,7 @@ import utils.Common._
 
 object DocumentGenerator {
 
-  val documentStitchFeeder = csv("feeders/GET_DocumentData.csv").random
+  val documentStitchFeeder = csv("feeders/STITCH_DocumentData.csv").random
 
   var jsonDocumentBuilder = ""
 
@@ -69,12 +70,16 @@ object DocumentGenerator {
                              |  }
                              |}""".stripMargin
 
+
+
+
   /* function to create a list of documents and add it within the JSON payload for document stitching
    takes an argument that indicate the number of documents required to be stitched.  The full payload is then saved
    to session as documentJSON */
 
   def documentListGenerator(numberOfDocuments: Int) = {
     //take the number of documents required and repeat creating a list of documents randomly from a feeder file
+    var pageCount = 0
     repeat(numberOfDocuments, "docNumber") {
       feed(documentStitchFeeder)
       .exec(session => {
@@ -84,6 +89,8 @@ object DocumentGenerator {
         //get the documentId and document name from the feeder file in session
         val documentId = session("documentId").as[String]
         val documentName = session("originaldocumentname").as[String]
+        val documentPageCount = session("pages").as[Int]
+        pageCount = pageCount + documentPageCount
         //replace some hard coded values with the document name and documentId
         var documentJSON = jsonDocumentString.replace("docName", docName)
         documentJSON = documentJSON.replace("docId", documentId)
@@ -102,8 +109,10 @@ object DocumentGenerator {
       completeJSON = completeJSON.replace("bundleId", bundleId)
       completeJSON = completeJSON.replace(",],", "],")
       //println("the JSON is " + completeJSON)
+      //round the page counts down to nearest 10 to reduce unique transaction names
+      val roundedPageCount = RoundDownTen(pageCount)
       //store the complete JSON in a session variable
-      session.setAll("documentJSON" -> completeJSON)
+      session.setAll("documentJSON" -> completeJSON, "pageCount" -> roundedPageCount)
     })
   }
 

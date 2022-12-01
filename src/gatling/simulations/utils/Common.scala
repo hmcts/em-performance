@@ -85,6 +85,24 @@ object Common {
     UUID
   }
 
+  //returns an int rounded up to nearest 10
+  def roundUpTen(number:Int): Int = {
+    if (number % 10 == 0) {
+      val roundedNumber = number
+      roundedNumber
+    }
+    else {
+      val roundedNumber = (10 - number % 10) + number
+      roundedNumber
+    }
+  }
+
+  //returns an int rounded down to nearest 10
+  def RoundDownTen (number:Int): Int = {
+    val roundedNumber =  number - number % 10
+    roundedNumber
+  }
+
 
 
 
