@@ -8,8 +8,7 @@ properties([
         ])
 ])
 
-//@Library("Infrastructure") _
-@Library("Infrastructure@nightly-dev") _
+@Library("Infrastructure") _
 
 def product = "em"
 def component = "performance"
