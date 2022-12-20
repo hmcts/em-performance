@@ -43,9 +43,9 @@ class NPAAPI extends Simulation {
   val testDurationMins = 60
 
   /*Hourly Volumes for NPA requests*/
-  val getMarkupHourlyTarget:Double = 10000
-  val createMarkupHourlyTarget:Double = 300
-  val burnRedactionHourlyTarget:Double = 100
+  val getMarkupHourlyTarget:Double = 12000
+  val createMarkupHourlyTarget:Double = 500
+  val burnRedactionHourlyTarget:Double = 200
 
 
   /*Rate Per Second Volume for DM Store Requests */

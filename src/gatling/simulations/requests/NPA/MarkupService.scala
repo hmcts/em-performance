@@ -33,7 +33,7 @@ object MarkupService {
   val MarkupCreateMarkups =
 
     group("NPA_Markup") {
-      exec(_.set("markupId", getUUID()))
+      exec(_.set("redactionId", getUUID()))
       .exec(_.set("rectangleId", getUUID()))
       .exec(http("POST_Markups")
         .post(npaAPIURL + "/api/markups")
