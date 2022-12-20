@@ -45,12 +45,13 @@ class NPAAPI extends Simulation {
   /*Hourly Volumes for NPA requests*/
   val getMarkupHourlyTarget:Double = 10000
   val createMarkupHourlyTarget:Double = 300
+  val burnRedactionHourlyTarget:Double = 100
 
 
   /*Rate Per Second Volume for DM Store Requests */
   val getMarkupRatePerSec = getMarkupHourlyTarget / 3600
   val createMarkupRatePerSec = createMarkupHourlyTarget / 3600
-
+  val burnRedactionRatePerSec = burnRedactionHourlyTarget/ 3600
 
 
   /* PIPELINE CONFIGURATION */
@@ -59,6 +60,7 @@ class NPAAPI extends Simulation {
   /* SIMULATION FEEDER FILES */
   /* NPA */
   val NPAgetMarkupFeeder = csv("feeders/ANNO_DocumentData.csv").circular
+  val NPABurnMarkupFeeder = csv("feeders/NPA_BurnRedaction.csv").random
 
 
 
@@ -143,13 +145,27 @@ class NPAAPI extends Simulation {
         .exec(MarkupService.MarkupDeleteMarkup)
     }
 
+  //scenario for Burn Markup
+  val ScnNPABurnMarkup = scenario("NPA_POST_BurnRedaction")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .feed(NPABurnMarkupFeeder)
+        .exec(MarkupService.MarkupCreateMarkups)
+        .exec(RedactionsService.MarkupBurnMarkups)
+    }
+
+
+
 
   /*NPA SIMULATIONS */
 
   setUp(
     //NPA Simulations
     ScnNPAGetMarkup.inject(simulationProfile(testType, getMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnNPABurnMarkup.inject(simulationProfile(testType, burnRedactionRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
