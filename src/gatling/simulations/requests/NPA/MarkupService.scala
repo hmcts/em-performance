@@ -34,6 +34,7 @@ object MarkupService {
 
     group("NPA_Markup") {
       exec(_.set("markupId", getUUID()))
+      .exec(_.set("rectangleId", getUUID()))
       .exec(http("POST_Markups")
         .post(npaAPIURL + "/api/markups")
         .headers(npaPostMarkupsHeader)

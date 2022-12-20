@@ -4,7 +4,7 @@
   "page": 1,
   "rectangles": [
     {
-      "id": "#{markupId}",
+      "id": "#{rectangleId}",
       "x": 0,
       "y": 0,
       "width": 0,

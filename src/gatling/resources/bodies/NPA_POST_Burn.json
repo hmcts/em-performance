@@ -1,19 +1,19 @@
 {
-  "caseId": "redactionCase",
+  "caseId": "123456",
   "documentId": "#{documentId}",
-  "redactedFileName": "BurnRedaction.pdf",
+  "redactedFileName": "BurnRedactions.pdf",
   "redactions": [
     {
       "redactionId": "#{redactionId}",
       "documentId": "#{documentId}",
-      "page": 0,
+      "page": 1,
       "rectangles": [
         {
           "id": "#{rectangleId}",
-          "x": 0,
-          "y": 0,
-          "width": 0,
-          "height": 0
+          "x": 50,
+          "y": 50,
+          "width": 50,
+          "height": 50
         }
       ]
     }
