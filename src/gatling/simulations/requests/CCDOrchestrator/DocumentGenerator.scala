@@ -20,8 +20,6 @@ object DocumentGenerator {
 
   val documentStitchFeeder = csv("feeders/STITCH_DocumentData.csv").random
 
-  var jsonDocumentBuilder = ""
-
 
   var jsonDocumentTop = """{
                           |  "case_details": {
@@ -79,6 +77,7 @@ object DocumentGenerator {
 
   def documentListGenerator(numberOfDocuments: Int) = {
     //take the number of documents required and repeat creating a list of documents randomly from a feeder file
+    var jsonDocumentBuilder = ""
     var pageCount = 0
     repeat(numberOfDocuments, "docNumber") {
       feed(documentStitchFeeder)
