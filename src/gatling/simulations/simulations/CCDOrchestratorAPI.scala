@@ -121,7 +121,6 @@ class CCDOrchestratorAPI extends Simulation {
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
         .exec(CCDBundleStitchingService.CCDBundleCreateBundleSync)
-        .exec(CCDBundleStitchingService.CCDBundleCreateBundleSync)
     }
 
   //scenario for CCD Create Bundle Async
@@ -139,7 +138,7 @@ class CCDOrchestratorAPI extends Simulation {
 
   setUp(
     ScnCCDCreateBundleSync.inject(simulationProfile(testType, postSyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //ScnCCDCreateBundleAsync.inject(simulationProfile(testType, postAsyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnCCDCreateBundleAsync.inject(simulationProfile(testType, postAsyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 
