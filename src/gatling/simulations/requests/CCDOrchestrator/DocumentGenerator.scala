@@ -112,7 +112,6 @@ object DocumentGenerator {
       //round the page counts down to nearest 10 to reduce unique transaction names
       val roundedPageCount = RoundDownTen(pageCount)
       pageCount = 0
-      println("complete JSON is" + completeJSON)
       //store the complete JSON in a session variable
       session.setAll("documentJSON" -> completeJSON, "pageCount" -> roundedPageCount)
     })
