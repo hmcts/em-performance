@@ -78,6 +78,7 @@ object DocumentGenerator {
   def documentListGenerator(numberOfDocuments: Int) = {
     //take the number of documents required and repeat creating a list of documents randomly from a feeder file
     var jsonDocumentBuilder = ""
+    var documentJSON = ""
     var pageCount = 0
     repeat(numberOfDocuments, "docNumber") {
       feed(documentStitchFeeder)
@@ -91,7 +92,7 @@ object DocumentGenerator {
         val documentPageCount = session("pages").as[Int]
         pageCount = pageCount + documentPageCount
         //replace some hard coded values with the document name and documentId
-        var documentJSON = jsonDocumentString.replace("docName", docName)
+        documentJSON = jsonDocumentString.replace("docName", docName)
         documentJSON = documentJSON.replace("docId", documentId)
         documentJSON = documentJSON.replace("docFilename", documentName)
         //add a comma at the end of the document JSON for the next document in the list
@@ -104,10 +105,10 @@ object DocumentGenerator {
       //get a UUID for the bundle ID
       val bundleId = getUUID()
       var completeJSON = jsonDocumentTop + jsonDocumentBuilder + jsonDocumentBottom
+      jsonDocumentBuilder = ""
       //replace the bundleId hard coded value with the created bundleId.  Also replace the last comma from the document list
       completeJSON = completeJSON.replace("bundleId", bundleId)
       completeJSON = completeJSON.replace(",],", "],")
-      //println("the JSON is " + completeJSON)
       //round the page counts down to nearest 10 to reduce unique transaction names
       val roundedPageCount = RoundDownTen(pageCount)
       //store the complete JSON in a session variable
