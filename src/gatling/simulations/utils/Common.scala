@@ -99,8 +99,13 @@ object Common {
 
   //returns an int rounded down to nearest 100
   def roundHundred (number:Int): Int = {
-    println("the initial number is " + number)
-    val roundedNumber = ((number + 50) / 100) * 100;
+    var roundedNumber = 0
+    if (number < 100) {
+      roundedNumber = 100
+    }
+    else {
+      roundedNumber = ((number + 50) / 100) * 100;
+    }
     roundedNumber
   }
 
