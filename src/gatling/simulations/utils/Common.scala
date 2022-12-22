@@ -97,9 +97,10 @@ object Common {
     }
   }
 
-  //returns an int rounded down to nearest 10
-  def RoundDownTen (number:Int): Int = {
-    val roundedNumber =  number - number % 10
+  //returns an int rounded down to nearest 100
+  def roundHundred (number:Int): Int = {
+    println("the initial number is " + number)
+    val roundedNumber = ((number + 50) / 100) * 100;
     roundedNumber
   }
 

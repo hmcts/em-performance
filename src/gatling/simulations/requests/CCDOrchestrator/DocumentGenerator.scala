@@ -110,7 +110,7 @@ object DocumentGenerator {
       completeJSON = completeJSON.replace("bundleId", bundleId)
       completeJSON = completeJSON.replace(",],", "],")
       //round the page counts down to nearest 10 to reduce unique transaction names
-      val roundedPageCount = RoundDownTen(pageCount)
+      val roundedPageCount = roundHundred(pageCount)
       pageCount = 0
       //store the complete JSON in a session variable
       session.setAll("documentJSON" -> completeJSON, "pageCount" -> roundedPageCount)
