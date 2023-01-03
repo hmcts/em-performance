@@ -20,7 +20,7 @@ object CCDBundleStitchingService {
 
   val CCDBundleCreateBundleSync =
 
-    group("CCDBundle_CreateBundle") {
+    group("CCDBundle_CreateSyncBundle") {
         DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,5))
         .exec(http("POST_CCD_Sync_Bundle_#{pageCount}")
             .post(ccdOrchestratorAPIURL + "/api/stitch-ccd-bundles")
@@ -32,7 +32,7 @@ object CCDBundleStitchingService {
 
   val CCDBundleCreateBundleAsync =
 
-    group("CCDBundle_CreateBundle") {
+    group("CCDBundle_CreateAsyncBundle") {
       DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,5))
         .exec(http("POST_CCD_ASync_Bundle_#{pageCount}")
           .post(ccdOrchestratorAPIURL + "/api/new-bundle")
