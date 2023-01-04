@@ -1,9 +1,9 @@
 {
   "id": "#{bookmarkId}",
-  "name": "string",
+  "name": "bookmark",
   "documentId": "#{documentId}",
-  "createdBy": "string",
-  "pageNumber": 1,
+  "createdBy": "#{userId}",
+  "pageNumber": "#{pageNumber}",
   "getxCoordinate": "#{xBookmarkPosition}",
   "getyCoordinate": "#{yBookmarkPosition}",
   "parent": "#{bookmarkId}",

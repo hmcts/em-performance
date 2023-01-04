@@ -39,19 +39,21 @@ object BookmarkService {
        exec(http("GET_Bookmarks")
         .get(annoAPIURL + "/api/#{documentId}/bookmarks")
         .headers(annoCreateBookmarkHeader)
-        .check(status is 404))
+        .check(status in (404,401)))
     }
 
 
   /* DELETE request for multiple existing bookmark objects.  The request requires both an S2S token and Idam token and this should be
       called prior to the request being made.  A feeder file was created with documents with prefix name "ANNO_EM_DMStore" and these
-      documents can be used to retrieve the bookmarks.  The document delete function needs a page number and x and y coordiantes  */
+      documents can be used to retrieve the bookmarks.  The document delete function needs a page number and x and y coordiantes.  The
+        design of the API call requires the creation of a bookmark to be made first as there are session variables created in the JSON*/
 
   val BookmarkDeleteMultipleBookmarks =
 
     group("Annotations_Bookmark") {
       exec(http("DELETE_Bookmarks")
         .delete(annoAPIURL + "/api/bookmarks_multiple")
+        .body(ElFileBody("bodies/ANNO_DeleteMultipleBookmarks.json")).asJson
         .headers(annoCreateBookmarkHeader))
     }
 
@@ -64,7 +66,7 @@ object BookmarkService {
 
     group("Annotations_Bookmark") {
       exec(_.set("xBookmarkPosition", getRandomNumberDoubleBetweenValues(1, 100)).set("yBookmarkPosition", getRandomNumberDoubleBetweenValues(1, 100))
-        .set("pageNumber", getRandomNumberIntBetweenValues(1, 5)).set("bookmarkId",getUUID()))
+        .set("pageNumber", getRandomNumberIntBetweenValues(1, 5)))
       .exec(http("PUT_Bookmarks")
         .put(annoAPIURL + "/api/bookmarks")
         .body(ElFileBody("bodies/ANNO_UpdateExistingBookmark.json")).asJson

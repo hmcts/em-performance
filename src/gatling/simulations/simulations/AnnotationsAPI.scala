@@ -17,7 +17,7 @@ import scala.language.postfixOps
 
 class AnnotationsAPI extends Simulation {
 
-  val dmBaseURL = dmStoreURL
+
 
   /* TEST TYPE DEFINITION */
   /* pipeline = nightly pipeline against the AAT environment (see the Jenkins_nightly file) */
@@ -37,14 +37,15 @@ class AnnotationsAPI extends Simulation {
   val env = System.getProperty("env", environment) //manually override the environment aat|perftest e.g. ./gradle gatlingRun -Denv=aat
   /* ******************************** */
 
+  val dmBaseURL = dmStoreURL
+
   /* PERFORMANCE TEST CONFIGURATION */
   val rampUpDurationMins = 5
   val rampDownDurationMins = 5
   val testDurationMins = 60
   /*Hourly Volumes for Annotation requests*/
-  val createBookmarkHourlyTarget:Double = 250
+  val createBookmarkHourlyTarget:Double = 300
   val getBookmarksHourlyTarget:Double = 10000
-  val updateBookmarksHourlyTarget:Double = 300
   val getMetadataHourlyTarget:Double = 10000
   val createDeleteAnnotationsHourlyTarget:Double = 400
   val getSetFilterAnnotations:Double = 400
@@ -52,7 +53,6 @@ class AnnotationsAPI extends Simulation {
   /*Rate Per Second Volume for Annotation Requests */
   val createBookmarkRatePerSec = createBookmarkHourlyTarget / 3600
   val getBookmarksRatePerSec = getBookmarksHourlyTarget / 3600
-  val updateBookmarkRatePerSec = updateBookmarksHourlyTarget / 3600
   val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
   val createDeleteAnnotationsRatePerSec = createDeleteAnnotationsHourlyTarget / 3600
   val getSetFilterAnnotationsRatePerSec = getSetFilterAnnotations / 3600
@@ -70,10 +70,6 @@ class AnnotationsAPI extends Simulation {
   }
   /* ******************************** */
 
-  //  /* PIPELINE CONFIGURATION */
-  //  val numberOfPipelineUsersSole:Double = 5
-  //  val numberOfPipelineUsersJoint:Double = 5
-  /* ******************************** */
 
   val httpProtocol = HttpProtocol
     .baseUrl(dmBaseURL)
@@ -122,16 +118,18 @@ class AnnotationsAPI extends Simulation {
   }
 
   /* ANNOTATION SCENARIOS*/
-
-  //scenario for DM Store Document Upload
-  val ScnAnnoCreateBookmark = scenario("Annotations Create Bookmark")
+  //scenario for Annotations Create/Delete Bookmark
+  val ScnAnnoCreateUpdateDeleteBookmark = scenario("Annotations Create/Update/Delete Bookmark")
     .exitBlockOnFail {
-      exec(  _.set("env", s"${env}"))
+      exec(_.set("env", s"${env}"))
         .feed(AnnoCreateBookmarkFeeder)
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
         .exec(BookmarkService.BookmarkCreateBookmark)
+        .exec(BookmarkService.BookmarkUpdateExistingBookmarks)
+        .exec(BookmarkService.BookmarkDeleteMultipleBookmarks)
     }
+
 
   val ScnAnnoGetBookmarks = scenario("Annotations Get Bookmarks")
     .exitBlockOnFail {
@@ -142,14 +140,6 @@ class AnnotationsAPI extends Simulation {
         .exec(BookmarkService.BookmarkGetBookmarks)
     }
 
-  val ScnAnnoUpdateBookmarks = scenario("Annotations Update Bookmarks")
-    .exitBlockOnFail {
-      exec(_.set("env", s"${env}"))
-        .feed(AnnoCreateBookmarkFeeder)
-        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
-        .exec(Authentication.IdamAuth("Caseworker"))
-        .exec(BookmarkService.BookmarkUpdateExistingBookmarks)
-    }
 
 
   val ScnAnnoGetMetadata = scenario("Annotations Get Metadata")
@@ -168,8 +158,7 @@ class AnnotationsAPI extends Simulation {
         .feed(AnnoCreateBookmarkFeeder)
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
-        .exec(AnnotationsService.AnnotationsCreateAnnotation)
-        .exec(AnnotationsService.AnnotationsDeleteAnnotation)
+        .exec(AnnotationsService.createAnnotation())
     }
 
   val ScnAnnoSetFilterGetFilter = scenario("Annotations Set Filter")
@@ -185,9 +174,8 @@ class AnnotationsAPI extends Simulation {
   /*ANNOTATIONS SIMULATIONS */
 
   setUp(
-    ScnAnnoCreateBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoCreateUpdateDeleteBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoUpdateBookmarks.inject(simulationProfile(testType, updateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, createDeleteAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getSetFilterAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
