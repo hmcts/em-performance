@@ -10,6 +10,27 @@ import io.gatling.http.Predef._
 
 object AnnotationsService {
 
+  /*function to create an annotation.  Firstly a call to get filter on annotation is made to find if an existing annotation exists.
+  if it does then delete the annotation and annotation-set using the relevant delete commands.  Create the annotation and then do a
+  delete tidy up on the annotations again.  this means that the data set can be used again multiple times.  */
+
+  def createAnnotation() = {
+
+    exec(AnnotationsSetFilterService.AnnotationsSetFilterGetFilterAnnotation)
+    .doIf("#{annotationIdExists.exists()}")
+     {
+       exec(session => {
+         val annotationIdValue = session("annotationIdExists").as[String]
+         session.set("annotationId",annotationIdValue)
+       })
+       .exec(AnnotationsService.AnnotationsDeleteAnnotation)
+       .exec(AnnotationSetService.AnnotationsSetDeleteAnnotation)
+       .exec(session => session.removeAll("annotationIdExists","annotationId"))
+     }
+    .exec(AnnotationsService.AnnotationsCreateAnnotation)
+    .exec(AnnotationsService.AnnotationsDeleteAnnotation)
+    .exec(AnnotationSetService.AnnotationsSetDeleteAnnotation)
+  }
 
     /* POST request for creating an annotation within a document.  The request requires both an S2S token and Idam token and this should be
        called prior to the request being made.  */
@@ -18,8 +39,10 @@ object AnnotationsService {
     val AnnotationsCreateAnnotation =
       group("Annotations_Annotations") {
         exec(session => {
-          session.setAll("annotationId" -> "3fa85f64-5717-4562-b3fc-2c963f66afa6", "annotationSetId" -> getUUID(), "rectangleId" -> getUUID(), "commentsId" -> getUUID(),
-          "currentDateTime" -> currentDateTime("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
+          session.setAll("annotationId" -> getUUID, "createdBy" -> getUUID(), "annotationSetId" -> getUUID(), "rectangleId" -> getUUID(),
+          "rectangleX" -> getRandomNumberIntBetweenValues(1,100), "rectangleY" -> getRandomNumberIntBetweenValues(1,100),
+          "rectangleWidth" -> getRandomNumberIntBetweenValues(1,100), "rectangleHeight" -> getRandomNumberIntBetweenValues(1,100),
+          "commentsId" -> getUUID(), "currentDateTime" -> currentDateTime("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
         })
         .exec(http("POST_Annotation")
           .post(annoAPIURL + "/api/annotations")
