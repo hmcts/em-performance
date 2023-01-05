@@ -33,8 +33,11 @@ object MarkupService {
   val MarkupCreateMarkups =
 
     group("NPA_Markup") {
-      exec(_.set("redactionId", getUUID()))
-      .exec(_.set("rectangleId", getUUID()))
+      exec(session => {
+        session.setAll("rectangleId" -> getUUID(), "redactionId" -> getUUID(), "pageNumber" -> getRandomNumberIntBetweenValues(1, 5),
+          "rectangleX" -> getRandomNumberIntBetweenValues(1, 100), "rectangleY" -> getRandomNumberIntBetweenValues(1, 100),
+          "rectangleWidth" -> getRandomNumberIntBetweenValues(1, 100), "rectangleHeight" -> getRandomNumberIntBetweenValues(1, 100))
+      })
       .exec(http("POST_Markups")
         .post(npaAPIURL + "/api/markups")
         .headers(npaPostMarkupsHeader)

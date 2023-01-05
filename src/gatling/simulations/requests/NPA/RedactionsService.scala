@@ -20,6 +20,11 @@ object RedactionsService {
   val MarkupBurnMarkups =
 
     group("NPA_Markup") {
+        exec(session => {
+        session.setAll("rectangleId" -> getUUID(), "redactionId" -> getUUID(), "pageNumber" -> getRandomNumberIntBetweenValues(1, 5),
+          "rectangleX" -> getRandomNumberIntBetweenValues(1, 100), "rectangleY" -> getRandomNumberIntBetweenValues(1, 100),
+          "rectangleWidth" -> getRandomNumberIntBetweenValues(1, 100), "rectangleHeight" -> getRandomNumberIntBetweenValues(1, 100))
+        })
         exec(http("POST_Redaction")
           .post(npaAPIURL + "/api/redaction")
           .headers(npaPostMarkupsHeader)

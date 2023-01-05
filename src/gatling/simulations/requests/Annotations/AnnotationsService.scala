@@ -39,7 +39,7 @@ object AnnotationsService {
     val AnnotationsCreateAnnotation =
       group("Annotations_Annotations") {
         exec(session => {
-          session.setAll("annotationId" -> getUUID, "createdBy" -> getUUID(), "annotationSetId" -> getUUID(), "rectangleId" -> getUUID(),
+          session.setAll("annotationId" -> getUUID(), "createdBy" -> getUUID(), "annotationSetId" -> getUUID(), "rectangleId" -> getUUID(),
           "rectangleX" -> getRandomNumberIntBetweenValues(1,100), "rectangleY" -> getRandomNumberIntBetweenValues(1,100),
           "rectangleWidth" -> getRandomNumberIntBetweenValues(1,100), "rectangleHeight" -> getRandomNumberIntBetweenValues(1,100),
           "commentsId" -> getUUID(), "currentDateTime" -> currentDateTime("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
