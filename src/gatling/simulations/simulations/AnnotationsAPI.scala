@@ -48,7 +48,7 @@ class AnnotationsAPI extends Simulation {
   val getBookmarksHourlyTarget:Double = 10000
   val getMetadataHourlyTarget:Double = 10000
   val createDeleteAnnotationsHourlyTarget:Double = 400
-  val getSetFilterAnnotations:Double = 400
+  val getSetFilterAnnotations:Double = 10000
 
   /*Rate Per Second Volume for Annotation Requests */
   val createBookmarkRatePerSec = createBookmarkHourlyTarget / 3600
