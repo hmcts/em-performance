@@ -40,9 +40,11 @@ class DocAssemblyAPI extends Simulation {
   val testDurationMins = 60
   /*Hourly Volumes for DM Store requests*/
   val docAssemblyConvert:Double = 600
+  val docAssemblyRenderTemplate:Double = 1800
 
-  /*Rate Per Second Volume for DM Store Requests */
+  /*Rate Per Second Volume for Doc Assembly Requests */
   val docAssemblyConvertRatePerSec = docAssemblyConvert / 3600
+  val docAssemblyRenderTemplateRatePerSec = docAssemblyRenderTemplate / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -138,6 +140,7 @@ class DocAssemblyAPI extends Simulation {
 
   setUp(
     ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnDocAssemblyRenderTemplate.inject(simulationProfile(testType, docAssemblyRenderTemplateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

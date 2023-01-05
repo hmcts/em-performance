@@ -17,6 +17,7 @@ object TemplateRendition {
     group("DocAssembly_RenderTemplate") {
       exec(http("POST_DocAssemblyRenderTemplate")
         .post(docAssemblyURL + "/api/template-renditions")
+        .body(ElFileBody("bodies/DocAssembly_Template.json")).asJson
         .headers(docAssemblyConvertHeader))
     }
 
