@@ -26,7 +26,7 @@ object CCDBundleStitchingService {
             .post(ccdOrchestratorAPIURL + "/api/stitch-ccd-bundles")
             .headers(ccdBundlePostTaskHeader)
             .body(StringBody("#{documentJSON}")).asJson
-            .check(jsonPath("$.data.caseBundles[0].value.id")))
+            .check(jsonPath("$.data.data.applications[0].value.documentLink.document_url")))
     }
 
 
