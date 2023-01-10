@@ -20,134 +20,94 @@ object DocumentGenerator {
 
   val documentStitchFeeder = csv("feeders/STITCH_DocumentData.csv").random
 
-
-  var jsonDocumentTop = """{
-                          |  "case_details": {
-                          |    "case_data": {
-                          |      "caseBundles": [
-                          |        {
-                          |          "value": {
-                          |            "id": "bundleId",
-                          |            "title": "Bundle title",
-                          |            "description": "Test bundle",
-                          |            "eligibleForStitching": "yes",
-                          |            "eligibleForCloning": "no",
-                          |            "documents": [
-                          |            """.stripMargin
-
-
-  var jsonDocumentString = """{
-                             |                "value": {
-                             |                  "name": "docName",
-                             |                  "description": "description",
-                             |                  "sourceDocument": {
-                             |                    "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId",
-                             |                    "document_filename": "docFilename",
-                             |                    "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId/binary"
-                             |                  }
-                             |                }
-                             |              }
-                             |              """.stripMargin
+      var jsonDocumentTop = """{
+                              |  "caseTypeId": "PRLAPPS",
+                              |  "jurisdictionId": "PRIVATELAW",
+                              |  "case_details": {
+                              |    "case_data": {
+                              |      "bundleConfiguration": "prl-bundle-config.yaml",
+                              |      "id": "1670864481337521",
+                              |      "data": {
+                              |        "applicantCaseName": "1 Test Case C100 31212",
+                              |        "caseNumber": "1670864481337521",
+                              |        "hearingDetails": {
+                              |          "hearingVenueAddress": "STRAND, LONDON",
+                              |          "hearingDateAndTime": "2023-01-13T10:00",
+                              |          "hearingJudgeName": null
+                              |        },
+                              |        "orders": [],
+                              |        "allOtherDocuments": [],
+                              |        "applications": [""".stripMargin
 
 
-  var jsonDocumentBottom = """],
-                             |            "folders": [],
-                             |            "fileName": "fileName",
-                             |            "coverpageTemplate": null,
-                             |            "hasTableOfContents": "Yes",
-                             |            "hasCoversheets": "Yes",
-                             |            "hasFolderCoversheets": null,
-                             |            "stitchStatus": "",
-                             |            "paginationStyle": "off",
-                             |            "pageNumberFormat": "numberOfPages",
-                             |            "stitchingFailureMessage": null
-                             |          }
-                             |        }
-                             |      ]
-                             |    }
-                             |  }
+   var jsonDocumentString = """{
+                              |            "id": null,
+                              |            "value": {
+                              |              "documentLink": {
+                              |                "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId",
+                              |                "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId/binary",
+                              |                "document_filename": "docFilename",
+                              |                "document_hash": null,
+                              |                "document_creation_date": null
+                              |              },
+                              |              "documentFileName": "docFilename",
+                              |              "documentGroup": "applicantApplication"
+                              |            }
+                              |          }""".stripMargin
+
+
+  var jsonDocumentBottom = """]
+                             |      }
+                             |    },
+                             |    "id": "Applicant Firstname Applicant Lastname"
+                             |  },
+                             |  "event_id": "createBundle"
                              |}""".stripMargin
 
-
-
-
-  /* function to create a list of documents and add it within the JSON payload for document stitching
-   takes an argument that indicate the number of documents required to be stitched.  The full payload is then saved
-   to session as documentJSON */
-
-  def documentListGenerator(numberOfDocuments: Int) = {
-    //take the number of documents required and repeat creating a list of documents randomly from a feeder file
-    var jsonDocumentBuilder = ""
-    var documentJSON = ""
-    var pageCount = 0
-    repeat(numberOfDocuments, "docNumber") {
-      feed(documentStitchFeeder)
+  //  /* function to create a list of documents and add it within the JSON payload for document stitching
+  //   takes an argument that indicate the number of documents required to be stitched.  The full payload is then saved
+  //   to session as documentJSON */
+  //
+    def documentListGenerator(numberOfDocuments: Int) = {
+      //take the number of documents required and repeat creating a list of documents randomly from a feeder file
+      var jsonDocumentBuilder = ""
+      var documentJSON = ""
+      var pageCount = 0
+      repeat(numberOfDocuments, "docNumber") {
+        feed(documentStitchFeeder)
+        .exec(session => {
+          var counter = session("docNumber").as[Int]
+          counter += 1
+          val docName = "doc" + counter
+          //get the documentId and document name from the feeder file in session
+          val documentId = session("documentId").as[String]
+          val documentName = session("originaldocumentname").as[String]
+          val documentPageCount = session("pages").as[Int]
+          pageCount = pageCount + documentPageCount
+          //replace some hard coded values with the document name and documentId
+          documentJSON = jsonDocumentString.replace("docName", docName)
+          documentJSON = documentJSON.replace("docId", documentId)
+          documentJSON = documentJSON.replace("docFilename", documentName)
+          //add a comma at the end of the document JSON for the next document in the list
+          jsonDocumentBuilder = jsonDocumentBuilder + documentJSON + ","
+          session
+        })
+      }
+        //create the full JSON payload using the top, JSON document list and the JSON at the bottom.
       .exec(session => {
-        var counter = session("docNumber").as[Int]
-        counter += 1
-        val docName = "doc" + counter
-        //get the documentId and document name from the feeder file in session
-        val documentId = session("documentId").as[String]
-        val documentName = session("originaldocumentname").as[String]
-        val documentPageCount = session("pages").as[Int]
-        pageCount = pageCount + documentPageCount
-        //replace some hard coded values with the document name and documentId
-        documentJSON = jsonDocumentString.replace("docName", docName)
-        documentJSON = documentJSON.replace("docId", documentId)
-        documentJSON = documentJSON.replace("docFilename", documentName)
-        //add a comma at the end of the document JSON for the next document in the list
-        jsonDocumentBuilder = jsonDocumentBuilder + documentJSON + ","
-        session
+        //get a UUID for the bundle ID
+        val bundleId = getUUID()
+        var completeJSON = jsonDocumentTop + jsonDocumentBuilder + jsonDocumentBottom
+        jsonDocumentBuilder = ""
+        //replace the bundleId hard coded value with the created bundleId.  Also replace the last comma from the document list
+        //completeJSON = completeJSON.replace("bundleId", bundleId)
+        completeJSON = completeJSON.replace(",]", "]")
+        //round the page counts down to nearest 10 to reduce unique transaction names
+        val roundedPageCount = roundHundred(pageCount)
+        pageCount = 0
+        //store the complete JSON in a session variable
+        session.setAll("documentJSON" -> completeJSON, "pageCount" -> roundedPageCount)
       })
     }
-      //create the full JSON payload using the top, JSON document list and the JSON at the bottom.
-    .exec(session => {
-      //get a UUID for the bundle ID
-      val bundleId = getUUID()
-      var completeJSON = jsonDocumentTop + jsonDocumentBuilder + jsonDocumentBottom
-      jsonDocumentBuilder = ""
-      //replace the bundleId hard coded value with the created bundleId.  Also replace the last comma from the document list
-      completeJSON = completeJSON.replace("bundleId", bundleId)
-      completeJSON = completeJSON.replace(",],", "],")
-      //round the page counts down to nearest 10 to reduce unique transaction names
-      val roundedPageCount = roundHundred(pageCount)
-      pageCount = 0
-      //store the complete JSON in a session variable
-      session.setAll("documentJSON" -> completeJSON, "pageCount" -> roundedPageCount)
-    })
-  }
-
-
-  /*This code is not currently used */
-
-  def BundleDocumentsGenerator: Json = {
-    BundleDocuments(
-      documents = DocumentGenerator.BundleDocumentGenerator
-    ).asJson
-  }
-
-
-  def BundleDocumentGenerator: List[BundleDocument] = List[BundleDocument] {
-    BundleDocument(
-      value = DocumentItemsGenerator
-    )
-  }
-
-  def DocumentItemsGenerator: DocumentItems = {
-    DocumentItems(
-      name = "docName",
-      description = "description",
-      sourceDocument = DocumentDataGenerator
-    )
-  }
-
-  def DocumentDataGenerator: DocumentData = {
-    DocumentData(
-      document_url = "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId",
-      document_filename = "docFilename",
-      document_binary_url = "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId/binary"
-    )
-  }
-
 
 }

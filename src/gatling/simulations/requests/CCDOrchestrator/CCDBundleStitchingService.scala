@@ -33,7 +33,7 @@ object CCDBundleStitchingService {
   val CCDBundleCreateBundleAsync =
 
     group("CCDBundle_CreateAsyncBundle") {
-      DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,5))
+      DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,3))
         .exec(http("POST_CCD_ASync_Bundle_#{pageCount}")
           .post(ccdOrchestratorAPIURL + "/api/new-bundle")
           .headers(ccdBundlePostTaskHeader)
