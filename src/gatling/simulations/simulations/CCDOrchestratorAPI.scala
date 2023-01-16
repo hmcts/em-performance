@@ -118,8 +118,9 @@ class CCDOrchestratorAPI extends Simulation {
   val ScnCCDCreateBundleSync = scenario("CCD_ORCHESTRATOR_Create_Bundle_Sync")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
-        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(Authentication.S2SAuth("prlCaseWorker", "EM_GW"))
+        //.exec(Authentication.S2SAuth("Caseworker", "prl_cos_api"))
+        .exec(Authentication.IdamAuth("prlCaseWorker"))
         .exec(CCDBundleStitchingService.CCDBundleCreateBundleSync)
     }
 
@@ -127,8 +128,9 @@ class CCDOrchestratorAPI extends Simulation {
   val ScnCCDCreateBundleAsync = scenario("CCD_ORCHESTRATOR_Create_Bundle_Async")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
-        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(Authentication.S2SAuth("prlCaseWorker", "EM_GW"))
+        //.exec(Authentication.S2SAuth("Caseworker", "prl_cos_api"))
+        .exec(Authentication.IdamAuth("prlCaseWorker"))
         .exec(CCDBundleStitchingService.CCDBundleCreateBundleAsync)
     }
 

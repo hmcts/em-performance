@@ -7,7 +7,7 @@ import io.gatling.core.Predef._
 import utils.Common._
 import io.gatling.http.Predef._
 
-/* Document Generator for creating multiple documents for a stitching request.  The purpose of the generator is to
+/* Sync Document Generator for creating multiple documents for a stitching request.  The purpose of the generator is to
    build a JSON payload by appending the top of the JSON to a list of documents that are randomly picked from a feeder file
    The document list can be dynamic and is dependent on a input number that determines how many documents are to be stitched.
    The JSON has been split up into the top, example of a document list entry and the bottom of the JSON.
@@ -16,53 +16,58 @@ import io.gatling.http.Predef._
    but a working solution using these libraries has not been built yet, so using the less elegant code for now.
  */
 
-object DocumentGenerator {
+object SyncDocumentGenerator {
 
-  val documentStitchFeeder = csv("feeders/STITCH_DocumentData.csv").random
+    val documentStitchFeeder = csv("feeders/STITCH_DocumentData.csv").random
 
-      var jsonDocumentTop = """{
-                              |  "caseTypeId": "PRLAPPS",
-                              |  "jurisdictionId": "PRIVATELAW",
-                              |  "case_details": {
-                              |    "case_data": {
-                              |      "bundleConfiguration": "prl-bundle-config.yaml",
-                              |      "id": "1670864481337521",
-                              |      "data": {
-                              |        "applicantCaseName": "1 Test Case C100 31212",
-                              |        "caseNumber": "1670864481337521",
-                              |        "hearingDetails": {
-                              |          "hearingVenueAddress": "STRAND, LONDON",
-                              |          "hearingDateAndTime": "2023-01-13T10:00",
-                              |          "hearingJudgeName": null
-                              |        },
-                              |        "orders": [],
-                              |        "allOtherDocuments": [],
-                              |        "applications": [""".stripMargin
+    var jsonDocumentTop = """{
+                            |  "case_details": {
+                            |    "case_data": {
+                            |      "caseBundles": [
+                            |        {
+                            |          "value": {
+                            |            "id": "bundleId",
+                            |            "title": "Bundle title",
+                            |            "description": "Test bundle",
+                            |            "eligibleForStitching": "yes",
+                            |            "eligibleForCloning": "no",
+                            |            "documents": [
+                            |            """.stripMargin
 
 
-   var jsonDocumentString = """{
-                              |            "id": null,
-                              |            "value": {
-                              |              "documentLink": {
-                              |                "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId",
-                              |                "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId/binary",
-                              |                "document_filename": "docFilename",
-                              |                "document_hash": null,
-                              |                "document_creation_date": null
-                              |              },
-                              |              "documentFileName": "docFilename",
-                              |              "documentGroup": "applicantApplication"
-                              |            }
-                              |          }""".stripMargin
+    var jsonDocumentString = """{
+                               |                "value": {
+                               |                  "name": "docName",
+                               |                  "description": "description",
+                               |                  "sourceDocument": {
+                               |                    "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId",
+                               |                    "document_filename": "docFilename",
+                               |                    "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId/binary"
+                               |                  }
+                               |                }
+                               |              }
+                               |              """.stripMargin
+
+    var jsonDocumentBottom = """],
+                               |            "folders": [],
+                               |            "fileName": "fileName",
+                               |            "coverpageTemplate": null,
+                               |            "hasTableOfContents": "Yes",
+                               |            "hasCoversheets": "Yes",
+                               |            "hasFolderCoversheets": null,
+                               |            "stitchStatus": "",
+                               |            "paginationStyle": "off",
+                               |            "pageNumberFormat": "numberOfPages",
+                               |            "stitchingFailureMessage": null
+                               |          }
+                               |        }
+                               |      ]
+                               |    }
+                               |  }
+                               |}""".stripMargin
 
 
-  var jsonDocumentBottom = """]
-                             |      }
-                             |    },
-                             |    "id": "Applicant Firstname Applicant Lastname"
-                             |  },
-                             |  "event_id": "createBundle"
-                             |}""".stripMargin
+
 
   //  /* function to create a list of documents and add it within the JSON payload for document stitching
   //   takes an argument that indicate the number of documents required to be stitched.  The full payload is then saved
@@ -93,15 +98,15 @@ object DocumentGenerator {
           session
         })
       }
-        //create the full JSON payload using the top, JSON document list and the JSON at the bottom.
+  //      //create the full JSON payload using the top, JSON document list and the JSON at the bottom.
       .exec(session => {
         //get a UUID for the bundle ID
         val bundleId = getUUID()
         var completeJSON = jsonDocumentTop + jsonDocumentBuilder + jsonDocumentBottom
         jsonDocumentBuilder = ""
         //replace the bundleId hard coded value with the created bundleId.  Also replace the last comma from the document list
-        //completeJSON = completeJSON.replace("bundleId", bundleId)
-        completeJSON = completeJSON.replace(",]", "]")
+        completeJSON = completeJSON.replace("bundleId", bundleId)
+        completeJSON = completeJSON.replace(",],", "],")
         //round the page counts down to nearest 10 to reduce unique transaction names
         val roundedPageCount = roundHundred(pageCount)
         pageCount = 0
@@ -109,5 +114,6 @@ object DocumentGenerator {
         session.setAll("documentJSON" -> completeJSON, "pageCount" -> roundedPageCount)
       })
     }
+
 
 }

@@ -17,6 +17,7 @@ object Authentication {
   def IdamAuth(userType: String) =
 
     exec(session => userType match {
+      case "prlCaseWorker" => session.set("emailAddressCCD", "prl_caseworker_courtadmin@mailinator.com").set("userId", "prl_caseworker_courtadmin@mailinator.com").set("passwordCCD", "Nagoya0102").set("userRole", "caseworker")
       case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("userId", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker")
       case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12")
       case "Citizen" => session.set("emailAddressCCD", session("emailAddress").as[String]).set("passwordCCD", session("password").as[String])
@@ -43,6 +44,7 @@ object Authentication {
   def S2SAuth(userType: String, microServiceType: String) =
 
     exec(session => userType match {
+      case "prlCaseWorker" => session.set("emailAddressCCD", "prl_caseworker_courtadmin@mailinator.com").set("userId", "prl_caseworker_courtadmin@mailinator.com").set("passwordCCD", "Nagoya0102").set("userRole", "caseworker").set("microService", microServiceType)
       case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("userId", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker").set("microService", microServiceType)
       case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12").set("microService", microServiceType)
       case "Citizen" => session.set("emailAddressCCD", session("emailAddress").as[String]).set("passwordCCD", session("password").as[String]).set("microService", microServiceType)
