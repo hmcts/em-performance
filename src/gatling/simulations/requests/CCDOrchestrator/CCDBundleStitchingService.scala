@@ -21,19 +21,19 @@ object CCDBundleStitchingService {
   val CCDBundleCreateBundleSync =
 
     group("CCDBundle_CreateSyncBundle") {
-        DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,4))
+        SyncDocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,4))
         .exec(http("POST_CCD_Sync_Bundle_#{pageCount}")
             .post(ccdOrchestratorAPIURL + "/api/stitch-ccd-bundles")
             .headers(ccdBundlePostTaskHeader)
             .body(StringBody("#{documentJSON}")).asJson
-            .check(jsonPath("$.data.data.applications[0].value.documentLink.document_url")))
+            .check(jsonPath("$.data.caseBundles[0].value.stitchedDocument.document_url")))
     }
 
 
   val CCDBundleCreateBundleAsync =
 
     group("CCDBundle_CreateAsyncBundle") {
-      DocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,4))
+        AsyncDocumentGenerator.documentListGenerator(getRandomNumberIntBetweenValues(2,4))
         .exec(http("POST_CCD_ASync_Bundle_#{pageCount}")
           .post(ccdOrchestratorAPIURL + "/api/new-bundle")
           .headers(ccdBundlePostTaskHeader)
