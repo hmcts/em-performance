@@ -21,6 +21,7 @@ object Authentication {
       case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("userId", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker")
       case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12")
       case "Citizen" => session.set("emailAddressCCD", session("emailAddress").as[String]).set("passwordCCD", session("password").as[String])
+      case "sscsCaseWorker" => session.set("emailAddressCCD", "ccdloadtest751@gmail.com").set("userId", "ccdloadtest751@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker")
     })
 
       .exec(http("IdamAuthentication")
@@ -48,6 +49,7 @@ object Authentication {
       case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("userId", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker").set("microService", microServiceType)
       case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12").set("microService", microServiceType)
       case "Citizen" => session.set("emailAddressCCD", session("emailAddress").as[String]).set("passwordCCD", session("password").as[String]).set("microService", microServiceType)
+      case "sscsCaseWorker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("userId", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker").set("microService", microServiceType)
     })
 
       .exec(http("S2SAuthentication")
