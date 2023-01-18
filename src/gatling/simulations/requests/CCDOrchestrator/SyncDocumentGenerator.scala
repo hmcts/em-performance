@@ -44,9 +44,9 @@ object SyncDocumentGenerator {
                              |      "description": null,
                              |      "sortIndex": index,
                              |      "sourceDocument": {
-                             |      "document_url": "http://dm-store-aat.service.core-compute-aat.internal/documents/docId",
+                             |      "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId",
                              |      "document_filename": "docFilename",
-                             |      "document_binary_url": "http://dm-store-aat.service.core-compute-aat.internal/documents/docId/binary",
+                             |      "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/docId/binary",
                              |      "document_hash": "ebad12b8f9b8f7c1c779dc52441b86a891f6c10ace9995eefe4508b08b8e8abe"
                              |    }
                              |    }
