@@ -41,8 +41,8 @@ class CCDOrchestratorAPI extends Simulation {
   val testDurationMins = 60
 
   /*Hourly Volumes for CCDOrchestrator requests*/
-  val PostSyncBundleHourlyTarget:Double = 600
-  val PostAsyncBundleHourlyTarget:Double = 400
+  val PostSyncBundleHourlyTarget:Double = 200
+  val PostAsyncBundleHourlyTarget:Double = 170
 
   /*Rate Per Second Volume for CCDOrchestrator Requests */
   val postSyncBundleRatePerSec = PostSyncBundleHourlyTarget / 3600
@@ -138,7 +138,7 @@ class CCDOrchestratorAPI extends Simulation {
 
   setUp(
     ScnCCDCreateBundleSync.inject(simulationProfile(testType, postSyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnCCDCreateBundleAsync.inject(simulationProfile(testType, postAsyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    //ScnCCDCreateBundleAsync.inject(simulationProfile(testType, postAsyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

@@ -1,0 +1,79 @@
+{
+  "case_details": {
+    "case_data": {
+      "bundleConfiguration": "prl-bundle-config.yaml",
+      "id": "1673557328951614",
+      "data": {
+        "applicantCaseName": "1 Test Case C100 31212",
+        "caseNumber": "1670864481337521",
+        "hearingDetails": {
+          "hearingVenueAddress": "STRAND, LONDON",
+          "hearingDateAndTime": "2023-01-13T10:00",
+          "hearingJudgeName": null
+        },
+        "orders": [],
+        "allOtherDocuments": [],
+        "applications": [
+          {
+            "id": null,
+            "value": {
+              "documentLink": {
+                "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/e8e87bab-6534-4410-8484-7e5a98656409",
+                "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/e8e87bab-6534-4410-8484-7e5a98656409/binary",
+                "document_filename": "STITCHING_EM_DMStore_78_5MB.docx",
+                "document_hash": null,
+                "document_creation_date": null
+              },
+              "documentFileName": "STITCHING_EM_DMStore_78_5MB.docx",
+              "documentGroup": "applicantApplication"
+            }
+          },
+          {
+            "id": null,
+            "value": {
+              "documentLink": {
+                "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/768e22ec-df90-4953-b41a-cc00e4b348fb",
+                "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/768e22ec-df90-4953-b41a-cc00e4b348fb/binary",
+                "document_filename": "STITCHING_EM_DMStore_175_15MB.docx",
+                "document_hash": null,
+                "document_creation_date": null
+              },
+              "documentFileName": "STITCHING_EM_DMStore_175_15MB.docx",
+              "documentGroup": "applicantApplication"
+            }
+          },
+          {
+            "id": null,
+            "value": {
+              "documentLink": {
+                "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/89b7ee76-ac74-4d6b-817d-7dc7db5ff302",
+                "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/89b7ee76-ac74-4d6b-817d-7dc7db5ff302/binary",
+                "document_filename": "STITCHING_EM_DMStore_230_5MB.pdf",
+                "document_hash": null,
+                "document_creation_date": null
+              },
+              "documentFileName": "STITCHING_EM_DMStore_230_5MB.pdf",
+              "documentGroup": "applicantApplication"
+            }
+          },
+          {
+            "id": null,
+            "value": {
+              "documentLink": {
+                "document_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/1e774e80-131f-4a23-88c8-9520d13fd64e",
+                "document_binary_url": "http://dm-store-perftest.service.core-compute-perftest.internal/documents/1e774e80-131f-4a23-88c8-9520d13fd64e/binary",
+                "document_filename": "STITCHING_EM_DMStore_4_1MB.pdf",
+                "document_hash": null,
+                "document_creation_date": null
+              },
+              "documentFileName": "STITCHING_EM_DMStore_4_1MB.pdf",
+              "documentGroup": "applicantApplication"
+            }
+          }
+        ]
+      }
+    },
+    "id": "Applicant Firstname Applicant Lastname"
+  },
+  "event_id": "createBundle"
+}
