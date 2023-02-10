@@ -45,10 +45,10 @@ class EMTest extends Simulation {
   val testDurationMins = 60
 
   /*Hourly Volumes for DM Store requests*/
-  val docUploadHourlyTarget:Double = 10000
-  val docDownloadHourlyTarget:Double = 50000
-  val docDownloadBinaryHourlyTarget:Double = 40000
-  val docUpdateHourlyTarget:Double = 7500
+  val docUploadHourlyTarget: Double = 10000
+  val docDownloadHourlyTarget: Double = 50000
+  val docDownloadBinaryHourlyTarget: Double = 40000
+  val docUpdateHourlyTarget: Double = 7500
   val docDeleteHourlyTarget: Double = 150
   /*Rate Per Second Volume for DM Store Requests */
   val docUploadRatePerSec = docUploadHourlyTarget / 3600
@@ -57,37 +57,42 @@ class EMTest extends Simulation {
   val docUpdateRatePerSec = docUpdateHourlyTarget / 3600
   val docDeleteRatePerSec = docDeleteHourlyTarget / 3600
 
-  /*Hourly Volumes for Doc Assembly requests*/
-  val docAssemblyConvertHourlyTarget: Double = 600
-  /*Rate Per Second Volume for DM Store Requests */
-  val docAssemblyConvertRatePerSec = docAssemblyConvertHourlyTarget / 3600
-
-  /*Hourly Volumes for Annotations requests*/
-  val AnnoCreateBookmarkHourlyTarget: Double = 600
-  val getBookmarksHourlyTarget:Double = 10000
-  val updateBookmarksHourlyTarget:Double = 300
-  val getMetadataHourlyTarget:Double = 10000
+  /*Hourly Volumes for Annotation requests*/
+  val createBookmarkHourlyTarget: Double = 300
+  val getBookmarksHourlyTarget: Double = 10000
+  val getMetadataHourlyTarget: Double = 10000
   val createDeleteAnnotationsHourlyTarget: Double = 400
-  val getSetFilterAnnotations: Double = 400
-  /*Rate Per Second Volume for DM Store Requests */
-  val AnnoCreateBookmarkRatePerSec = AnnoCreateBookmarkHourlyTarget / 3600
+  val getSetFilterAnnotations: Double = 10000
+  /*Rate Per Second Volume for Annotation Requests */
+  val createBookmarkRatePerSec = createBookmarkHourlyTarget / 3600
   val getBookmarksRatePerSec = getBookmarksHourlyTarget / 3600
-  val updateBookmarkRatePerSec = updateBookmarksHourlyTarget / 3600
   val getMetadataRatePerSec = getMetadataHourlyTarget / 3600
   val createDeleteAnnotationsRatePerSec = createDeleteAnnotationsHourlyTarget / 3600
   val getSetFilterAnnotationsRatePerSec = getSetFilterAnnotations / 3600
 
+  /*Hourly Volumes for CCDOrchestrator requests*/
+  val PostSyncBundleHourlyTarget: Double = 200
+  val PostAsyncBundleHourlyTarget: Double = 170
+  /*Rate Per Second Volume for CCDOrchestrator Requests */
+  val postSyncBundleRatePerSec = PostSyncBundleHourlyTarget / 3600
+  val postAsyncBundleRatePerSec = PostAsyncBundleHourlyTarget / 3600
+
+  /*Hourly Volumes for Doc Assembly requests*/
+  val docAssemblyConvert: Double = 600
+  val docAssemblyRenderTemplate: Double = 1800
+  /*Rate Per Second Volume for Doc Assembly Requests */
+  val docAssemblyConvertRatePerSec = docAssemblyConvert / 3600
+  val docAssemblyRenderTemplateRatePerSec = docAssemblyRenderTemplate / 3600
+
   /*Hourly Volumes for NPA requests*/
-  val getMarkupHourlyTarget: Double = 10000
-  val createMarkupHourlyTarget: Double = 300
+  val getMarkupHourlyTarget: Double = 12000
+  val createMarkupHourlyTarget: Double = 500
+  val burnRedactionHourlyTarget: Double = 200
   /*Rate Per Second Volume for DM Store Requests */
   val getMarkupRatePerSec = getMarkupHourlyTarget / 3600
   val createMarkupRatePerSec = createMarkupHourlyTarget / 3600
+  val burnRedactionRatePerSec = burnRedactionHourlyTarget / 3600
 
-  /*Hourly Volumes for Stitching requests*/
-  val CreateBundleHourlyTarget: Double = 400
-  /*Rate Per Second Volume for DM Store Requests */
-  val CreateBundleRatePerSec = CreateBundleHourlyTarget / 3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -98,12 +103,13 @@ class EMTest extends Simulation {
   val DMDocumentDownloadBinaryFeeder = csv("feeders/GET_DocumentData.csv").circular
   val DMDocumentDeleteFeeder = csv("feeders/DELETE_DocumentData.csv").random
   val DMDocumentUpdateFeeder = csv("feeders/GET_DocumentData.csv").random
-  /* Doc Assembly */
-  val DocAssemblyConvertFeeder = csv("feeders/POSTDocAssemblyConvert.csv").random
   /* Annotations */
   val AnnoCreateBookmarkFeeder = csv("feeders/ANNO_DocumentData.csv").circular
+  /* Doc Assembly */
+  val DocAssemblyConvertFeeder = csv("feeders/POSTDocAssemblyConvert.csv").random
   /* NPA */
   val NPAgetMarkupFeeder = csv("feeders/ANNO_DocumentData.csv").circular
+  val NPABurnMarkupFeeder = csv("feeders/NPA_BurnRedaction.csv").random
 
 
   //If running in debug mode, disable pauses between steps
@@ -211,7 +217,8 @@ class EMTest extends Simulation {
         .exec(StoreDocumentUpdateService.DMStoreUpdateDoc)
     }
 
-  //scenario for DocAssembly Convert Document
+  /*DocAssembly Scenarios */
+
   val ScnDocAssemblyConvert = scenario("DocAssembly Document Convert")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
@@ -221,15 +228,28 @@ class EMTest extends Simulation {
         .exec(DocumentConversion.DocAssemblyConvert)
     }
 
-  //scenario for Annotations Create Bookmark
-  val ScnAnnoCreateBookmark = scenario("Annotations Create Bookmark")
+  val ScnDocAssemblyRenderTemplate = scenario("DocAssembly Render Template")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(TemplateRendition.DocAssemblyRenderTemplate)
+    }
+
+  /* ANNOTATION SCENARIOS*/
+
+  //scenario for Annotations Create/Delete Bookmark
+  val ScnAnnoCreateUpdateDeleteBookmark = scenario("Annotations Create/Update/Delete Bookmark")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
         .feed(AnnoCreateBookmarkFeeder)
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
         .exec(BookmarkService.BookmarkCreateBookmark)
+        .exec(BookmarkService.BookmarkUpdateExistingBookmarks)
+        .exec(BookmarkService.BookmarkDeleteMultipleBookmarks)
     }
+
 
   val ScnAnnoGetBookmarks = scenario("Annotations Get Bookmarks")
     .exitBlockOnFail {
@@ -240,14 +260,6 @@ class EMTest extends Simulation {
         .exec(BookmarkService.BookmarkGetBookmarks)
     }
 
-  val ScnAnnoUpdateBookmarks = scenario("Annotations Update Bookmarks")
-    .exitBlockOnFail {
-      exec(_.set("env", s"${env}"))
-        .feed(AnnoCreateBookmarkFeeder)
-        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
-        .exec(Authentication.IdamAuth("Caseworker"))
-        .exec(BookmarkService.BookmarkUpdateExistingBookmarks)
-    }
 
   val ScnAnnoGetMetadata = scenario("Annotations Get Metadata")
     .exitBlockOnFail {
@@ -258,14 +270,14 @@ class EMTest extends Simulation {
         .exec(MetadataService.MetadataGetMetadata)
     }
 
+
   val ScnAnnoCreateDeleteAnnotations = scenario("Annotations Create Annotations")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
         .feed(AnnoCreateBookmarkFeeder)
         .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
         .exec(Authentication.IdamAuth("Caseworker"))
-        .exec(AnnotationsService.AnnotationsCreateAnnotation)
-        .exec(AnnotationsService.AnnotationsDeleteAnnotation)
+        .exec(AnnotationsService.createAnnotation())
     }
 
   val ScnAnnoSetFilterGetFilter = scenario("Annotations Set Filter")
@@ -279,6 +291,16 @@ class EMTest extends Simulation {
 
   /* NPA SCENARIOS*/
 
+  //scenario for Burn Markup
+  val ScnNPABurnMarkup = scenario("NPA_POST_BurnRedaction")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
+        .exec(Authentication.IdamAuth("Caseworker"))
+        .feed(NPABurnMarkupFeeder)
+        .exec(MarkupService.MarkupCreateMarkups)
+        .exec(RedactionsService.MarkupBurnMarkups)
+    }
   //scenario for NPA Get Markups Download
   val ScnNPAGetMarkup = scenario("NPA_GET_Markup")
     .exitBlockOnFail {
@@ -300,13 +322,23 @@ class EMTest extends Simulation {
         .exec(MarkupService.MarkupDeleteMarkup)
     }
 
-  /* CCD STITCHING SCENARIOS*/
-  val ScnStitchBundles = scenario("CCD_STITCH_BUNDLES")
+  /* CCD ORCHESTRATOR STITCHING SCENARIOS*/
+
+  //scenario for CCD Create Bundle
+  val ScnCCDCreateBundleSync = scenario("CCD_ORCHESTRATOR_Create_Bundle_Sync")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-        .exec(Authentication.S2SAuth("Caseworker", "EM_GW"))
-        .exec(Authentication.IdamAuth("Caseworker"))
+        .exec(Authentication.S2SAuth("sscsCaseWorker", "SSCS"))
+        .exec(Authentication.IdamAuth("sscsCaseWorker"))
         .exec(CCDBundleStitchingService.CCDBundleCreateBundleSync)
+    }
+
+  //scenario for CCD Create Bundle Async
+  val ScnCCDCreateBundleAsync = scenario("CCD_ORCHESTRATOR_Create_Bundle_Async")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+        .exec(Authentication.S2SAuth("prlCaseWorker", "EM_GW"))
+        .exec(Authentication.IdamAuth("prlCaseWorker"))
         .exec(CCDBundleStitchingService.CCDBundleCreateBundleAsync)
     }
 
@@ -320,20 +352,22 @@ class EMTest extends Simulation {
     ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //DocAssembly Simulations
-    ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //Annotations Simulations
-    ScnAnnoCreateBookmark.inject(simulationProfile(testType, AnnoCreateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnAnnoCreateUpdateDeleteBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoUpdateBookmarks.inject(simulationProfile(testType, updateBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, createDeleteAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getSetFilterAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     //NPA Simulations
     ScnNPAGetMarkup.inject(simulationProfile(testType, getMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //STITCHING Simulations
-    ScnStitchBundles.inject(simulationProfile(testType, CreateBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnNPABurnMarkup.inject(simulationProfile(testType, burnRedactionRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    /*Doc Assembly Simulations */
+    ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnDocAssemblyRenderTemplate.inject(simulationProfile(testType, docAssemblyRenderTemplateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    /*CCD Stitching Simulations */
+    ScnCCDCreateBundleSync.inject(simulationProfile(testType, postSyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    ScnCCDCreateBundleAsync.inject(simulationProfile(testType, postAsyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

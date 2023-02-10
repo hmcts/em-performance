@@ -39,20 +39,22 @@ class DMStoreAPI extends Simulation {
   val rampUpDurationMins = 5
   val rampDownDurationMins = 5
   val testDurationMins = 60
+
+
   /*Hourly Volumes for DM Store requests*/
   val docUploadHourlyTarget:Double = 10000
   val docDownloadHourlyTarget:Double = 50000
   val docDownloadBinaryHourlyTarget:Double = 40000
   val docUpdateHourlyTarget:Double = 7500
   val docDeleteHourlyTarget:Double = 150
-  val docUploadStitchingHourlyTarget:Double = 1
+  //val docUploadStitchingHourlyTarget:Double = 1
   /*Rate Per Second Volume for DM Store Requests */
   val docUploadRatePerSec = docUploadHourlyTarget / 3600
   val docDownloadRatePerSec = docDownloadHourlyTarget / 3600
   val docDownloadBinaryRatePerSec = docDownloadBinaryHourlyTarget / 3600
   val docUpdateRatePerSec = docUpdateHourlyTarget / 3600
   val docDeleteRatePerSec = docDeleteHourlyTarget /3600
-  val docUploadStitchingRatePerSec = docUploadStitchingHourlyTarget /3600
+  //val docUploadStitchingRatePerSec = docUploadStitchingHourlyTarget /3600
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -185,9 +187,7 @@ class DMStoreAPI extends Simulation {
     ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
     ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //Data Prep for Stitching - not needed for blended test
-    //ScnDMStoreDocUploadStitching.inject(simulationProfile(testType, docUploadStitchingRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

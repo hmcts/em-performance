@@ -23,12 +23,10 @@ object AnnotationsService {
          val annotationIdValue = session("annotationIdExists").as[String]
          session.set("annotationId",annotationIdValue)
        })
-       .exec(AnnotationsService.AnnotationsDeleteAnnotation)
        .exec(AnnotationSetService.AnnotationsSetDeleteAnnotation)
        .exec(session => session.removeAll("annotationIdExists","annotationId"))
      }
     .exec(AnnotationsService.AnnotationsCreateAnnotation)
-    .exec(AnnotationsService.AnnotationsDeleteAnnotation)
     .exec(AnnotationSetService.AnnotationsSetDeleteAnnotation)
   }
 
