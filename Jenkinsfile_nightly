@@ -1,7 +1,7 @@
 #!groovy
 
 properties([
-        pipelineTriggers([H7 08 * * 1-5')]),
+        pipelineTriggers([cron('8 08 * * 1-5')]),
         //A build parameter TEST_TYPE is used to tell the script to use the pipeline simulation configuration
         parameters([
                 choice(name: 'TEST_TYPE', choices: 'pipeline', description: 'Test type (must be \'pipeline\' for Jenkins use)')
