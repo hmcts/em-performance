@@ -22,10 +22,6 @@
 ##
 ##############################################################################
 
-if [ -z ${JAVA_HOME} ]; then
-    JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'
-fi
-
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
 PRG="$0"
