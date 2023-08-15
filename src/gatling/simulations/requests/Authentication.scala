@@ -18,7 +18,7 @@ object Authentication {
 
     exec(session => userType match {
       case "prlCaseWorker" => session.set("emailAddressCCD", "prl_caseworker_courtadmin@mailinator.com").set("userId", "prl_caseworker_courtadmin@mailinator.com").set("passwordCCD", "Nagoya0102").set("userRole", "caseworker")
-      case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest-cw@gmail.com").set("userId", "ccdloadtest-cw@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker")
+      case "Caseworker" => session.set("emailAddressCCD", "ccdloadtest2861@gmail.com").set("userId", "ccdloadtest2861@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker")
       case "Legal" => session.set("emailAddressCCD", "ccdloadtest-la@gmail.com").set("passwordCCD", "Password12")
       case "Citizen" => session.set("emailAddressCCD", session("emailAddress").as[String]).set("passwordCCD", session("password").as[String])
       case "sscsCaseWorker" => session.set("emailAddressCCD", "ccdloadtest751@gmail.com").set("userId", "ccdloadtest751@gmail.com").set("passwordCCD", "Password12").set("userRole", "caseworker")
@@ -30,7 +30,7 @@ object Authentication {
         .formParam("username", "#{emailAddressCCD}")
         .formParam("password", "#{passwordCCD}")
         .formParam("client_id", "ccd_gateway")
-        .formParam("client_secret", clientSecret)
+        .formParam("client_secret", "")
         .formParam("scope", "openid profile roles openid roles profile")
         .header("Content-Type", "application/x-www-form-urlencoded")
         .check(jsonPath("$.access_token").saveAs("bearerToken")))
