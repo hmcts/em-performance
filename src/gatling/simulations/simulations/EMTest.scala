@@ -78,8 +78,8 @@ class EMTest extends Simulation {
   val postAsyncBundleRatePerSec = PostAsyncBundleHourlyTarget / 3600
 
   /*Hourly Volumes for Doc Assembly requests*/
-  val docAssemblyConvert: Double = 600
-  val docAssemblyRenderTemplate: Double = 1800
+  val docAssemblyConvert: Double = 1300
+  val docAssemblyRenderTemplate: Double = 1950
   /*Rate Per Second Volume for Doc Assembly Requests */
   val docAssemblyConvertRatePerSec = docAssemblyConvert / 3600
   val docAssemblyRenderTemplateRatePerSec = docAssemblyRenderTemplate / 3600
