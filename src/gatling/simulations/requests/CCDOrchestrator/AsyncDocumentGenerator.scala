@@ -60,6 +60,8 @@ object AsyncDocumentGenerator {
                              |    },
                              |    "id": "Applicant Firstname Applicant Lastname"
                              |  },
+                             |  "caseTypeId": "Benefit",
+                             |  "jurisdictionId": "SSCS",
                              |  "event_id": "createBundle"
                              |}""".stripMargin
 
