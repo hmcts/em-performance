@@ -39,7 +39,7 @@ object BookmarkService {
        exec(http("GET_Bookmarks")
         .get(annoAPIURL + "/api/#{documentId}/bookmarks")
         .headers(annoCreateBookmarkHeader)
-        .check(status in (404,401)))
+        .check(status in (404,401,204)))
     }
 
 

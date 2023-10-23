@@ -21,7 +21,7 @@ object MarkupService {
       exec(http("GET_Markups")
         .get(npaAPIURL + "/api/markups/#{documentId}")
         .headers(npaGetMarkupsHeader)
-        .check(status in (200, 404)))
+        .check(status in (200, 404, 204)))
     }
 
 

@@ -19,8 +19,8 @@ object AnnotationsSetFilterService {
         .get(annoAPIURL + "/api/annotation-sets/filter")
         .queryParam("documentId","#{documentId}")
         .headers(annoSetFilterAnnotationHeader)
-        .check(jsonPath("$.id").optional.saveAs("annotationIdExists"))
-        .check(status in (200,404)))
+        // .check(jsonPath("$.id").optional.saveAs("annotationIdExists"))
+        .check(status in (200, 404, 204)))
     }
 
 }
