@@ -6,16 +6,16 @@ import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.pause.PauseType
 import io.gatling.core.scenario.Simulation
 import requests.Annotations._
-import requests.NPA._
 import requests.CCDOrchestrator._
-import requests.DocAssembly._
 import requests.DMStore._
+import requests.DocAssembly._
+import requests.NPA._
+import requests.Docmosis._
 import requests.Authentication
 import utils.Environment._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
-
 
 class EMTest extends Simulation {
 
@@ -93,6 +93,9 @@ class EMTest extends Simulation {
   val createMarkupRatePerSec = createMarkupHourlyTarget / 3600
   val burnRedactionRatePerSec = burnRedactionHourlyTarget / 3600
 
+  /*Hourly Volumes for Domosis Requests*/
+  val docmosisConvertRatePerSec: Double = 7630
+  val docmosisRenderRatePerSec: Double = 5356
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
@@ -342,32 +345,50 @@ class EMTest extends Simulation {
         .exec(CCDBundleStitchingService.CCDBundleCreateBundleAsync)
     }
 
+  /* DOCMOSIS SCENARIOS*/
+
+  val SCNDocmosisConvert = scenario("DOCMOSIS_Convert")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+      .exec(Docmosis.Convert)
+    }
+
+  val SCNDocmosisRender = scenario("DOCMOSIS_Render")
+    .exitBlockOnFail {
+      exec(_.set("env", s"${env}"))
+      .exec(Docmosis.Render)
+    }
+
 
   /*EM STORE SIMULATIONS */
 
   setUp(
     //DM Store Simulations
-    ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //Annotations Simulations
-    ScnAnnoCreateUpdateDeleteBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, createDeleteAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getSetFilterAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    //NPA Simulations
-    ScnNPAGetMarkup.inject(simulationProfile(testType, getMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnNPABurnMarkup.inject(simulationProfile(testType, burnRedactionRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    /*Doc Assembly Simulations */
-    ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnDocAssemblyRenderTemplate.inject(simulationProfile(testType, docAssemblyRenderTemplateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    /*CCD Stitching Simulations */
-    ScnCCDCreateBundleSync.inject(simulationProfile(testType, postSyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
-    ScnCCDCreateBundleAsync.inject(simulationProfile(testType, postAsyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+//     ScnDMStoreDocUpload.inject(simulationProfile(testType, docUploadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnDMStoreDocDownload.inject(simulationProfile(testType, docDownloadRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnDMStoreDocDownloadBinary.inject(simulationProfile(testType, docDownloadBinaryRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnDMStoreUpdateDocument.inject(simulationProfile(testType, docUpdateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnDMStoreDocDelete.inject(simulationProfile(testType, docDeleteRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//    // //Annotations Simulations
+//     ScnAnnoCreateUpdateDeleteBookmark.inject(simulationProfile(testType, createBookmarkRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnAnnoGetBookmarks.inject(simulationProfile(testType, getBookmarksRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnAnnoGetMetadata.inject(simulationProfile(testType, getMetadataRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnAnnoCreateDeleteAnnotations.inject(simulationProfile(testType, createDeleteAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnAnnoSetFilterGetFilter.inject(simulationProfile(testType, getSetFilterAnnotationsRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//    // //NPA Simulations
+//    ScnNPAGetMarkup.inject(simulationProfile(testType, getMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//    ScnNPACreateDeleteMarkup.inject(simulationProfile(testType, createMarkupRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//    ScnNPABurnMarkup.inject(simulationProfile(testType, burnRedactionRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//    // //Doc Assembly Simulations
+//     ScnDocAssemblyConvert.inject(simulationProfile(testType, docAssemblyConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+//     ScnDocAssemblyRenderTemplate.inject(simulationProfile(testType, docAssemblyRenderTemplateRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    // //CCD Stitching Simulations
+    // ScnCCDCreateBundleSync.inject(simulationProfile(testType, postSyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    // ScnCCDCreateBundleAsync.inject(simulationProfile(testType, postAsyncBundleRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+    //Docmosis Simulations
+    SCNDocmosisConvert.inject(simulationProfile(testType, docmosisConvertRatePerSec, numberOfPipelineUsers)).pauses(pauseOption),
+    SCNDocmosisRender.inject(simulationProfile(testType, docmosisRenderRatePerSec, numberOfPipelineUsers)).pauses(pauseOption)
+
   ).protocols(httpProtocol)
     .assertions(assertions(testType))
 

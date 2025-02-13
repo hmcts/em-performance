@@ -21,9 +21,8 @@ object Environment {
   val emStitchingHost = "em-stitching-#{env}.service.core-compute-#{env}.internal"
   val ccdOrchestratorAPIURL = "http://em-ccd-orchestrator-#{env}.service.core-compute-#{env}.internal"
   val ccdOrchestratorHost = "em-ccd-orchestrator-#{env}.service.core-compute-#{env}.internal"
+  val docmosisURL = "https://docmosis.#{env}.platform.hmcts.net"
 
   val HttpProtocol = http
-
-
 
 }

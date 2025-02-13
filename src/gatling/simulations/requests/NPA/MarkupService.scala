@@ -1,11 +1,10 @@
 package requests.NPA
-import utils.Environment._
-import utils.Headers._
+
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import utils.Common._
-import io.gatling.http.check.HttpCheck
-
+import utils.Environment._
+import utils.Headers._
 
 object MarkupService {
 
