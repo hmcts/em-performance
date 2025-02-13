@@ -94,8 +94,8 @@ class EMTest extends Simulation {
   val burnRedactionRatePerSec = burnRedactionHourlyTarget / 3600
 
   /*Hourly Volumes for Domosis Requests*/
-  val docmosisConvertRatePerSec: Double = 10 //7630
-  val docmosisRenderRatePerSec: Double = 10 //5356
+  val docmosisConvertRatePerSec: Double = 3 //7630
+  val docmosisRenderRatePerSec: Double = 3 //5356
 
   /* PIPELINE CONFIGURATION */
   val numberOfPipelineUsers = 1
