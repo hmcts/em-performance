@@ -113,6 +113,8 @@ class EMTest extends Simulation {
   /* NPA */
   val NPAgetMarkupFeeder = csv("feeders/ANNO_DocumentData.csv").circular
   val NPABurnMarkupFeeder = csv("feeders/NPA_BurnRedaction.csv").random
+  /* DOCMOSIS */
+  val DocmosisConvertFeeder = csv("feeders/Docmosis_ConvertData.csv").random
 
 
   //If running in debug mode, disable pauses between steps
@@ -340,9 +342,9 @@ class EMTest extends Simulation {
   val ScnCCDCreateBundleAsync = scenario("CCD_ORCHESTRATOR_Create_Bundle_Async")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
-        .exec(Authentication.S2SAuth("prlCaseWorker", "EM_GW"))
-        .exec(Authentication.IdamAuth("prlCaseWorker"))
-        .exec(CCDBundleStitchingService.CCDBundleCreateBundleAsync)
+      .exec(Authentication.S2SAuth("prlCaseWorker", "EM_GW"))
+      .exec(Authentication.IdamAuth("prlCaseWorker"))
+      .exec(CCDBundleStitchingService.CCDBundleCreateBundleAsync)
     }
 
   /* DOCMOSIS SCENARIOS*/
@@ -350,6 +352,7 @@ class EMTest extends Simulation {
   val SCNDocmosisConvert = scenario("DOCMOSIS_Convert")
     .exitBlockOnFail {
       exec(_.set("env", s"${env}"))
+      .feed(DocmosisConvertFeeder)
       .exec(Docmosis.Convert)
     }
 

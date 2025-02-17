@@ -22,12 +22,12 @@ object Docmosis {
   val Convert =
 
     group("Docmosis_Convert") {
-      exec(http("POST_Convert")
+      exec(http("POST_Convert_#{document}")
         .post(Environment.docmosisURL + "/rs/convert")
         .header("Content-Type", "multipart/form-data")
         .header("Accept", "PDF_CONTENT_TYPE")
-        .bodyPart(RawFileBodyPart("file", "data/1MB.docx")
-          .fileName("1MB.docx")
+        .bodyPart(RawFileBodyPart("file", "data/#{document}")
+          .fileName("#{document}")
           .contentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
         .formParam("accessKey", "dyVv8pXwQ03RRyJZQIPX2RWP9LgJJGTU08kc9dA8ATJoA9EZXQEWe7L1Uwe")
         .formParam("outputName", "1mb-file.pdf")
