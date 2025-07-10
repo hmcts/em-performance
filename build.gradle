@@ -51,3 +51,33 @@ sourceSets {
     }
   }
 }
+
+tasks.register("runSimulation", JavaExec) {
+  group = "Gatling Test"
+  description = "Runs a specified Gatling simulation without interactive mode"
+
+  classpath = sourceSets.gatling.runtimeClasspath
+  mainClass.set("io.gatling.app.Gatling")
+
+  // Add simulation class and results directory
+  args += [
+          "-s", "simulations.EMTest",
+          "-rf", layout.buildDirectory.get().asFile.toString() + "/reports/gatling"
+  ]
+
+  // JVM args required for Java 21
+  jvmArgs += ["--add-opens=java.base/java.lang=ALL-UNNAMED"]
+
+  // Pass through all -D properties from command line
+  jvmArgs += System.properties.findAll { key, _ ->
+    key instanceof String && key.startsWith("-D") == false && key != "java.class.path"
+  }.collect { key, value ->
+    "-D${key}=${value}"
+  }
+}
+
+// Override gatlingRun task
+tasks.named("gatlingRun") {
+  dependsOn("runSimulation")
+  enabled = false
+}
