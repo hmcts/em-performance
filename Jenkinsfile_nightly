@@ -8,7 +8,7 @@ properties([
         ])
 ])
 
-@Library("Infrastructure") _
+@Library("Infrastructure@jenkins-alerts-poc") _
 
 def product = "em"
 def component = "performance"
@@ -32,11 +32,11 @@ withNightlyPipeline("java", product, component) {
 
     loadVaultSecrets(secrets)
 
-    enablePerformanceTest()
+    enablePerformanceTest(timeout=30, perfGatlingAlerts=true, perfRerunOnFail=true)
 
-//    after('performanceTest') {
-//        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
-//    }
+    after('performanceTest') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+    }
 
 
 }
