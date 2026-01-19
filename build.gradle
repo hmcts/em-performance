@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-  gatling 'io.circe:circe-parser_2.13:0.14.0-M6'
+  gatling 'io.circe:circe-parser_2.13:0.14.15'
   gatling "io.circe:circe-generic_2.13:0.14.0-M6"
   gatlingImplementation project(':common-performance')
 }
