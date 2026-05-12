@@ -11,8 +11,7 @@
     {
       "matchManagers": ["git-submodules"],
       "matchPackageNames": ["common/common-performance"],
-      "automerge": true,
-      "automergeType": "branch"
+      "automerge": true
     }
   ]
 }
