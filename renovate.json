@@ -7,11 +7,13 @@
     "enabled": true
   },
   "schedule": ["at any time"],
+  "platformAutomerge": true,
   "packageRules": [
     {
       "matchManagers": ["git-submodules"],
       "matchPackageNames": ["common/common-performance"],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "pr"
     }
   ]
 }
