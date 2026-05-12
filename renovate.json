@@ -3,8 +3,16 @@
   "extends": [
     "local>hmcts/.github:renovate-config"
   ],
-  "schedule": ["at any time"],
   "git-submodules": {
     "enabled": true
-  }
+  },
+  "schedule": ["at any time"],
+  "packageRules": [
+    {
+      "matchManagers": ["git-submodules"],
+      "matchPackageNames": ["common/common-performance"],
+      "automerge": true,
+      "automergeType": "branch"
+    }
+  ]
 }
