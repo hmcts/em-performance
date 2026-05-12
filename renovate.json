@@ -11,7 +11,8 @@
   "packageRules": [
     {
       "matchManagers": ["git-submodules"],
-      "matchPackageNames": ["common/common-performance"],
+      "matchDepNames": ["common/common-performance"],
+      "matchUpdateTypes": ["digest"],
       "automerge": true,
       "automergeType": "pr"
     }
