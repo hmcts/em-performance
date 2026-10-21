@@ -13,6 +13,6 @@ performance {
 }
 
 dependencies {
-  gatling 'io.circe:circe-parser_2.13:0.14.16'
+  gatling 'io.circe:circe-parser_2.13:0.14.17'
   gatling "io.circe:circe-generic_2.13:0.14.17"
 }
