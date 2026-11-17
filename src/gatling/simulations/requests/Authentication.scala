@@ -1,18 +1,19 @@
 package requests
+
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import utilities.AzureKeyVault
 import utils.Environment._
 import utils.Headers._
-import com.typesafe.config.ConfigFactory
 
 object Authentication {
 
-  val clientSecret = ConfigFactory.load.getString("auth.clientSecret")
+  val clientSecret = AzureKeyVault.loadClientSecret("ccd-perftest", "ccd-api-gateway-oauth2-client-secret")
 
-    /*  Idam Authentication request to Idam service and returns a token
-        The def requires a user type as input so that relevant session variables can be set
-        The session variable bearerToken is created and can then be used in headers for EM requests
-     */
+  /*  Idam Authentication request to Idam service and returns a token
+      The def requires a user type as input so that relevant session variables can be set
+      The session variable bearerToken is created and can then be used in headers for EM requests
+   */
   //userType must be "Caseworker", "Legal" or "Citizen"
   def IdamAuth(userType: String) =
 
